@@ -1,0 +1,12 @@
+{
+	"full_name": "Bill White",
+	"email": "bill.white@griggsinst.com",
+	"github_username": "guleblanc",
+	"project_name": "C++ CMake Projects with google mock support",
+	"repo_name": "CMakeProjectXX",
+	"project_short_description": "A Template for CMake projects with Google Mock and Test Support",
+	"third_party_location": "/home/poppa/src/3pty",
+	"release_date": "2013-10-01",
+	"year": "2013",
+	"version": "0.1.0"
+}
