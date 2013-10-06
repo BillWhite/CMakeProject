@@ -12,6 +12,7 @@ configure_file (
   "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}Config.h"
   )
 
+add_subdirectory(libsrc)
 add_subdirectory(src)
 add_subdirectory(test)
 

@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/sh 
+GENERATOR="{{cookiecutter.cmake_generator}}"
 usage() {
     echo "Usage: $0 [options...] source_directory [build_directory]"
     echo "Options:"
@@ -22,7 +23,7 @@ while [ -z "$DONE" ] ; do
 	    ;;
 	-G)
 	    shift
-	    GENERATOR="-G $1"
+	    GENERATOR="$1"
 	    shift
 	    ;;
 	-D*)
@@ -56,9 +57,9 @@ if [ -n "$2" ] ; then
   if [ ! -d "$2" ] ; then
       mkdir -p "$2" || exit 100
       BUILD_DIR="$2"
-      cd "$2"
       CREATED=YES
   fi
+  cd "$2"
 fi
 if [ -n "$INIT" ]; then
     if [ ! -f CMakeCache.txt ] && [ -z "$CREATED" ] ; then
@@ -68,4 +69,4 @@ if [ -n "$INIT" ]; then
     rm -rf *
 fi
 
-CC=clang CXX=clang++ cmake $GENERATOR $DEFINITIONS "$SOURCE_FOLDER"
+CC={{cookiecutter.c_compiler}} CXX={{cookiecutter.cpp_compiler}} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_FOLDER"

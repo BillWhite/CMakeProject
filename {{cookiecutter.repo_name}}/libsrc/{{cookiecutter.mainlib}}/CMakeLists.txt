@@ -1,0 +1,6 @@
+include_directories(${CMAKE_SOURCE_DIR}/include ../include include)
+
+add_library({{cookiecutter.mainlib}} {{cookiecutter.mainlib}}.cpp)
+
+set_property(TARGET {{cookiecutter.mainlib}}
+             PROPERTY ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
