@@ -36,8 +36,9 @@ Installation.
         Unless you specify something special here, all projects made with this
         template will have this name.  The value of this string is denoted
 	`$PROJECT_NAME` in this documentation.
-   1.   `repo_name`: This needs to be here to make cookiecutter happy, though 
-        its value is never used.
+   1.   `repo_name`: This needs to be what you set `default_project_name` to.
+        This is a temporization to make cookiecutter work properly.  This may
+	be fixed in cookiecutter 0.7.0.
    1.   `mainapp`: The default name of the main applications.
    1.   `mainlib`: The default name of the main library.
    1.   `project_short_description`: A short description of your project.
@@ -70,7 +71,7 @@ Installation.
       will have a single test for the application and a single test for the
       library.  
       1. The application will be in $BUILD_DIR/bin.
-      2. The library will be in $BUILD_DIR/lib.  This is currently a static
+      1. The library will be in $BUILD_DIR/lib.  This is currently a static
          library (.a) but I will soon make dynamic libraries configurable.
       1. All tests will be in testbin.  They will all fail by design.  
       1. You can delete either the application or the library, or use them as
