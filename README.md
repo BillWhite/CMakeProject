@@ -11,7 +11,9 @@ This work depends on these tools:
 1. Google Mock.  I am using version 1.7.0, but I don't think the
    version is all that important.  Try whatever you want.  You
    might as well try the newest version.  I don't distribute
-   google mock, so you're on your own.
+   Google Mock, so you're on your own.  If you use a different
+   version, check that the include files in `src/CMakeLists.txt`
+   and `libsrc/CMakeLists.txt` are sensible.
 1. A suitable license.  The project resulting from this cookiecutter
    will have an empty license file.  Fill it in with the Apache License,
    or the BSD License, or whatever you want.  Knock yourself out.
