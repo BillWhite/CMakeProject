@@ -6,6 +6,7 @@ So, I made this cookiecutter template to record the result of my
 researches.
 
 This work depends on these tools:
+
 1. cookiecutter version 0.6.4, though perhaps 0.7.0 will work.
 1. Google Mock.  I am using version 1.7.0, but I don't think the
    version is all that important.  Try whatever you want.  You
