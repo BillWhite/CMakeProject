@@ -54,9 +54,20 @@ Installation.
             `/bin/sh $PROJECT_ROOT/pbin/configure-$PROJECT_NAME --help`
       This should list the command line parameters.  It's not currently
       possible to avoid setting the C and C++ compilers, though editing the
-      configure script should work for you.
-   1. The newly created project will have one appication and one library.  It
+      configure script should work for you.  For example, the command:
+      	    `/bin/sh $PROJECT_ROOT/pbin/configure-PROJECT_NAME \\
+	        -DCMAKE_BUILD_TYPE=Release \
+		-G 'Eclipse CDT4 - Makefile' \
+		$PROJECT_ROOT Release`
+      will configure the project in $PROJECT_ROOT with build area in
+      the directory `./Release`.
+   1. The newly created project will have one appication and one library. It
       will have a single test for the application and a single test for the
-      library.  All tests will fail by design.  You can delete either the
-      application or the library, or use them as patterns to make new applications
-      or libraries.
+      library.  
+      1. The application will be in $BUILD_DIR/bin.
+      2. The library will be in $BUILD_DIR/lib.  This is currently a static
+         library (.a) but I will soon make dynamic libraries configurable.
+      1. All tests will be in testbin.  They will all fail by design.  
+      1. You can delete either the application or the library, or use them as
+         patterns to make new applications or libraries, as you choose.
+
