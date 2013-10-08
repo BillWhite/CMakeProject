@@ -51,16 +51,25 @@ if [ -z "$1" ] ; then
   usage
   exit 100
 else
-  SOURCE_FOLDER="$1"
+  SOURCE_DIR="$1"
 fi
-if [ -n "$2" ] ; then
+if [ ! -d "$SOURCE_DIR" ] ; then
+  echo "$0: Putative source directory \"$SOURCE_DIRECTORY\" is not a directory after all."
+  exit 100
+fi
+SOURCE_DIR=$(cd $SOURCE_DIR; /bin/pwd)
+
+if [ -z "$2" ] ; then
+  BUILD_DIR=$(/bin/pwd)
+else
   if [ ! -d "$2" ] ; then
-      mkdir -p "$2" || exit 100
       BUILD_DIR="$2"
+      mkdir -p "$BUILD_DIR" || exit 100
       CREATED=YES
   fi
-  cd "$2"
 fi
+
+cd "$BUILD_DIR"
 if [ -n "$INIT" ]; then
     if [ ! -f CMakeCache.txt ] && [ -z "$CREATED" ] ; then
 	echo "$0: --init can only be specified when cmake has already been run."
@@ -69,4 +78,4 @@ if [ -n "$INIT" ]; then
     rm -rf *
 fi
 
-CC={{cookiecutter.c_compiler}} CXX={{cookiecutter.cpp_compiler}} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_FOLDER"
+CC={{cookiecutter.c_compiler}} CXX={{cookiecutter.cpp_compiler}} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_DIR"
