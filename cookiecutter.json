@@ -3,6 +3,7 @@
 	"email": "bill.white@griggsinst.com",
 	"github_username": "BillWhite",
 	"default_project_name": "CMakeProjectXX",
+	"repo_name": "CMakeProjectXX",
 	"mainapp": "cmapp1",
 	"mainlib": "cmutil",
 	"project_short_description": "A Template for CMake projects with Google Mock and Test Support",

@@ -36,6 +36,8 @@ Installation.
         Unless you specify something special here, all projects made with this
         template will have this name.  The value of this string is denoted
 	`$PROJECT_NAME` in this documentation.
+   1.   `repo_name`: This needs to be here to make cookiecutter happy, though 
+        its value is never used.
    1.   `mainapp`: The default name of the main applications.
    1.   `mainlib`: The default name of the main library.
    1.   `project_short_description`: A short description of your project.
