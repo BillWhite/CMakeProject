@@ -1,0 +1,14 @@
+#ifndef ${{cookiecutter.default_project_name|upper}}_CONFIG_H
+#define ${{cookiecutter.default_project_name|upper}}_CONFIG_H
+
+/**
+ * @file {{cookiecutter.default_project_name}}.h
+ * 
+ * Configuration values for project {{cookiecutter.default_project_name}}.
+ */
+// the configured options and settings for {{cookiecutter.default_project_name}}
+#define {{cookiecutter.default_project_name}}_VERSION_MAJOR @{{cookiecutter.default_project_name}}_VERSION_MAJOR@
+#define {{cookiecutter.default_project_name}}_VERSION_MINOR @{{cookiecutter.default_project_name}}_VERSION_MINOR@
+
+#endif /* ${{cookiecutter.default_project_name|upper}}_CONFIG_H */
+

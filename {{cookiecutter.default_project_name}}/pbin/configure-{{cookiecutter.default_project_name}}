@@ -4,6 +4,9 @@ usage() {
     echo "Usage: $0 [options...] source_directory [build_directory]"
     echo "Options:"
     echo "  --init            Initialize the build directory."
+    echo "  -G generator      Set the CMake generator type."
+    echo "  -D NAME=Value     Define a CMake value."
+    echo "  -DNAME=Value      Define a CMake value (one argument.)"
     echo "  --help            Print this help message."
 }
 
