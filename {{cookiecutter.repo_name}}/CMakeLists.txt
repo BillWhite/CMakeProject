@@ -7,6 +7,9 @@ set ({{cookiecutter.default_project_name}}_VERSION_MAJOR 0.1)
 set ({{cookiecutter.default_project_name}}_VERSION_MINOR 0.1)
 set ({{cookiecutter.default_project_name}}_VERSION_PATCH 0.1)
 
+set (clang_dir {{cookiecutter.clang_dir}})
+configureClang(clang_dir)
+
 configure_file (
   "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.default_project_name}}Config.h.in"
   "${PROJECT_BINARY_DIR}/include/{{cookiecutter.default_project_name}}Config.h"
