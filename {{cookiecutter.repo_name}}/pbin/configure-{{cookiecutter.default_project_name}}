@@ -1,5 +1,6 @@
 #!/bin/sh 
 GENERATOR="{{cookiecutter.cmake_generator}}"
+CLANG_DIR="{{cookiecutter.clang_dir}}"
 usage() {
     echo "Usage: $0 [options...] source_directory [build_directory]"
     echo "Options:"
@@ -15,6 +16,11 @@ while [ -z "$DONE" ] ; do
 	--#)
 	    shift
 	    set -x
+	    ;;
+	--clang-dir)
+	    shift
+	    CLANG_DIR="$1"
+	    shift
 	    ;;
 	--init)
 	    INIT=YES

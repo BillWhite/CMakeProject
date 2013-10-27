@@ -11,6 +11,7 @@
 	"google_mock_version": "1.7.0",
 	"c_compiler":"clang",
 	"cpp_compiler":"clang++",
+	"clang_dir" : "/home/poppa/share/clang-3.3",
 	"cmake_generator": "Eclipse CDT4 - Ninja",
 	"install_prefix":"/usr/local"
 }

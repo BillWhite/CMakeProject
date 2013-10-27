@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?>
+
+<cproject>
+<storageModule moduleId="org.eclipse.cdt.core.settings">
+<cconfiguration id="org.eclipse.cdt.core.default.config.1">
+<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="org.eclipse.cdt.core.default.config.1" moduleId="org.eclipse.cdt.core.settings" name="Configuration">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser">
+<attribute key="addr2line" value="addr2line"/>
+<attribute key="c++filt" value="c++filt"/>
+</extension>
+</extensions>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+<project-mappings/>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+<pathentry excluding="**/CMakeFiles/" kind="out" path=""/>
+<pathentry include="/home/poppa/src/cookiecutters/CMakeProject/CMakeProjectXX/clang_dir/lib/clang/3.3/include" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/cookiecutters/CMakeProject/CMakeProjectXX/clang_dir/include/c++/v1" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/cookiecutters/CMakeProject/CMakeProjectXX/include" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/cookiecutters/CMakeProject/CMakeProjectXX/libsrc/cmutil/include" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/cookiecutters/CMakeProject/CMakeProjectXX/src/cmapp1/include" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/3pty/gmock-1.7.0/include" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/3pty/gmock-1.7.0" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/3pty/gmock-1.7.0/gtest/include" kind="inc" path="" system="true"/>
+<pathentry include="/home/poppa/src/3pty/gmock-1.7.0/gtest" kind="inc" path="" system="true"/>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+<buildTargets>
+<target name=": edit_cache" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>edit_cache</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": rebuild_cache" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>rebuild_cache</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="libsrc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="libsrc" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] cmutil" path="libsrc/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmutil</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] cmutil/fast" path="libsrc/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmutil/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[lib] cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>cmutil</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[lib] cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/libsrc/cmutil" "/usr/local/bin/cmake" -P "CMakeFiles/cmutil.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="libsrc/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="libsrc/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="src" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[exe] cmapp1" path="src/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmapp1</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[exe] cmapp1/fast" path="src/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmapp1/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[exe] cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>cmapp1</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[exe] cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/src/cmapp1" "/usr/local/bin/cmake" -P "CMakeFiles/cmapp1.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="src/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="src/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="test/lib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="test/lib" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gmock" path="test/lib/gmock-1.7.0" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gmock</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gmock/fast" path="test/lib/gmock-1.7.0" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gmock/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[lib] gmock" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>gmock</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[lib] gmock" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/test/lib/gmock-1.7.0" "/usr/local/bin/cmake" -P "CMakeFiles/gmock.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gmock_main" path="test/lib/gmock-1.7.0" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gmock_main</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gmock_main/fast" path="test/lib/gmock-1.7.0" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gmock_main/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[lib] gmock_main" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>gmock_main</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[lib] gmock_main" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/test/lib/gmock-1.7.0" "/usr/local/bin/cmake" -P "CMakeFiles/gmock_main.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="test/lib/gmock-1.7.0" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="test/lib/gmock-1.7.0" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gtest" path="test/lib/gmock-1.7.0/gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gtest</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gtest/fast" path="test/lib/gmock-1.7.0/gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gtest/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[lib] gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>gtest</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[lib] gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/test/lib/gmock-1.7.0/gtest" "/usr/local/bin/cmake" -P "CMakeFiles/gtest.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gtest_main" path="test/lib/gmock-1.7.0/gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gtest_main</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[lib] gtest_main/fast" path="test/lib/gmock-1.7.0/gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>gtest_main/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[lib] gtest_main" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>gtest_main</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[lib] gtest_main" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/test/lib/gmock-1.7.0/gtest" "/usr/local/bin/cmake" -P "CMakeFiles/gtest_main.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="test/lib/gmock-1.7.0/gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="test/lib/gmock-1.7.0/gtest" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[exe] cmutil_test" path="test/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmutil_test</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[exe] cmutil_test/fast" path="test/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmutil_test/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[exe] cmutil_test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>cmutil_test</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[exe] cmutil_test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/test/cmutil" "/usr/local/bin/cmake" -P "CMakeFiles/cmutil_test.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="test/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="test/cmutil" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[exe] cmapp1_test" path="test/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmapp1_test</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="[exe] cmapp1_test/fast" path="test/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>cmapp1_test/fast</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Build" path="[Targets]/[exe] cmapp1_test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments>-C "/home/poppa/src/cookiecutters/CMakeProject" </buildArguments>
+<buildTarget>cmapp1_test</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name="Clean" path="[Targets]/[exe] cmapp1_test" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/cmake</buildCommand>
+<buildArguments>-E chdir "/home/poppa/src/cookiecutters/CMakeProject/test/cmapp1" "/usr/local/bin/cmake" -P "CMakeFiles/cmapp1_test.dir/cmake_clean.cmake"</buildArguments>
+<buildTarget></buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": all" path="test/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>all</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+<target name=": clean" path="test/cmapp1" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+<buildCommand>/usr/local/bin/ninja</buildCommand>
+<buildArguments></buildArguments>
+<buildTarget>clean</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+</target>
+</buildTargets>
+</storageModule>
+<storageModule moduleId="scannerConfiguration">
+<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="/home/poppa/share/clang-3.3/bin/clang" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="makefileGenerator">
+<runAction arguments="-f ${project_name}_scd.mk" command="/usr/local/bin/ninja" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+</storageModule>
+</cconfiguration>
+</storageModule>
+<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+<project id="CMakeProjectXX.null.1" name="CMakeProjectXX"/>
+</storageModule>
+</cproject>
