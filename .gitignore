@@ -15,5 +15,3 @@
 *.la
 *.a
 
-# Miscellaneous
-build.sh
