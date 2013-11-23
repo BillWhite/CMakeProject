@@ -1,0 +1,267 @@
+#!/bin/sh 
+GENERATOR="Eclipse CDT4 - Ninja"
+CLANG_VERSION=3.3
+export CLANG_DIR="$HOME/share/clang-3.3"
+BUILD_TYPE=Debug
+EXPORT_COMPILE_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+ROLL_BUILD_DIR=YES
+
+setCompilersFromClangDir() {
+  CC="${CLANG_DIR}/bin/clang"
+  CXX="${CLANG_DIR}/bin/clang++"
+}
+
+usage() {
+    echo "Usage: $0 [options...] source_directory [build_directory]"
+    echo "Options:"
+    echo "  -G generator      Set the CMake generator type."
+    echo "  -D NAME=Value     Define a CMake value."
+    echo "  -DNAME=Value      Define a CMake value (one argument.)"
+    echo "  --build_type type Use the given build type.  The usual"
+    echo "                    CMake build types are possible: Debug,"
+    echo "                    Release, etc."
+    echo "  --local-configuration FILE"
+    echo "                    Read command line parameters from the"
+    echo "                    given file.  These are processed when"
+    echo "                    this option is encountered, and it is as"
+    echo "                    if the contents of the file were interpolated"
+    echo "                    where the option occurs.  The options in the"
+    echo "                    file can be on several lines.  This allows"
+    echo "                    different shared locations to have different"
+    echo "                    system configurations.  See the contents of"
+    echo "                    the directory localconfigs for examples."
+    echo "  --host-configuration"
+    echo "                    This is equivalend to:"
+    echo "                      --local-configuration $Plocalconfigs/$(hostname)"
+    echo "                    where P is some folder on the path found in the"
+    echo "                    environment variable:"
+    echo "                      {{cookiecutter.default_project_name|upper}}PATH"
+    echo "                    This is the usual colon separated path variable."
+    echo "  --no-compile-commands-export"
+    echo "                    Don't export a compile_commands.json file."
+    echo "  --clang-version V Use version V of clang.  See --clang-dir"
+    echo "                    for the usage of this value."
+    echo "  --clang-dir DIR   Set the base of the clang directory.  See"
+    echo "                    the installation documentation for the"
+    echo "                    details.  The short form is:"
+    echo "                      1.) The compilers are found in $DIR/bin."
+    echo "                      2.) The standard C++ library includes"
+    echo "                          are found in $DIR/include/c++/v1"
+    echo "                      3.) The compiler include files are found"
+    echo "                          in $DIR/lib/clang/VERSION/include."
+    echo "                      4.) The system include files will be found"
+    echo "                          in /usr/include as usual."
+    echo "  --roll-build-dir  If an old build directory exists, then"
+    echo "                    roll it up.  Old directories are stored"
+    echo "                    as, say, \"Debug.~n~\", where \"n\" is"
+    echo "                    a number in increasing age order.  Otherwise,"
+    echo "                    and by default, they are just deleted."
+    echo "  --no-roll-build-dir"
+    echo "                    Don't roll the build directories."
+    echo "  --help            Help me, I'm melting."
+    echo ""
+}
+
+find_file_in_path() {
+    local FILE="$1"
+    local FFP_PATH="$2"
+    for dir in $(echo "$FFP_PATH" | tr ':' ' '); do
+	FFILE="$dir/$FILE"
+	if [ -f  "$FFILE" ] ; then
+	    echo "$FFILE"
+	    return 0
+	fi
+    done
+}
+
+find_config_args () {
+    CFPATH="${{cookiecutter.default_project_name|upper}}PATH"
+    if [ -z "$CFPATH" ] ; then
+	CFPATH="$HOME/lib/{{cookiecutter.default_project_name}}:$HOME/lib/localconfigs"
+	CFPATH="$CFPATH:$HOME/share/{{cookiecutter.default_project_name}}:$HOME/share/localconfigs"
+    fi
+    result=$(find_file_in_path "$1" "$CFPATH")
+    if [ -f "$result" ] ; then
+	echo $(cat "$result" | grep -v '^#' )
+	return 0
+    else
+	echo "$0: Can't find config file $1." > /dev/stderr
+	echo "   Config path:" > /dev/stderr
+	for d in "$(echo "$CFPATH" | tr ':' ' ')" ; do
+	    echo "      $d" > /dev/stderr
+	done
+	return 100
+    fi
+}
+
+rolldir() {
+    idx=0
+    while [ $(($idx < 100)) = 1 ] && [ -d "$1.~${idx}~" ] ; do
+	idx=$(( $idx + 1 ))
+    done
+    while [ $idx -gt 0 ] ; do
+	prev=$(( $idx - 1))
+	mv "$1.~${prev}~" "$1.~${idx}~"
+        idx=$(( $idx - 1 ))
+    done
+    if [ -d "$1" ] ; then
+	mv "$1" "$1.~0~"
+    fi
+}
+
+setCompilersFromClangDir
+
+process_args() {
+    local DONE
+    while [ -z "$DONE" ] ; do
+	case "$1" in
+	    --#)
+		shift
+		set -x
+		;;
+	    --local-configuration)
+		shift
+		HCARGS="$(find_config_args "$1")"
+		if [ $? = 0 ] ; then
+		    process_args $HCARGS
+		else
+		    return 100
+		fi
+		shift
+		;;
+	    --host-configuration)
+		shift
+		HCARGS="$(find_config_args $(hostname))"
+		if [ $? = 0 ] ; then
+		    process_args $HCARGS
+		else
+		    return 100
+		fi
+		;;
+	    --no-roll-build-dir)
+		shift
+		ROLL_BUILD_DIR=
+		;;
+	    --roll-build-dir)
+		shift
+		ROLL_BUILD_DIR=YES
+		;;
+            --no-compile-commands-export)
+		EXPORT_COMPILE_COMMANDS=""
+		shift
+		;;
+	    --build-type)
+		shift
+		BUILD_TYPE="$1"
+		shift
+		;;
+	    --clang-version)
+		shift
+		CLANG_VERSION="$1"
+		shift
+		;;
+            --clang-dir)
+		shift
+		export CLANG_DIR="$1"
+		shift
+		setCompilersFromClangDir
+		;;
+	    -G)
+		shift
+		GENERATOR="$1"
+		shift
+		;;
+	    -D*)
+		DFN=$(echo "$1" | sed 's/^-D//')
+		if [ -z "$DFN" ] ; then
+		    shift
+		    DFN = "$1"
+		fi
+		DEFINITIONS="$DEFINITIONS -D$DFN"
+		shift
+		;;
+	    --help)
+		usage
+	        return 100
+		;;
+	    -*)
+		echo "$0: Unknown comand line parameter \"$1\""
+		usage
+		return 100
+		;;
+	    "")
+		DONE=YES
+		;;
+	    *)
+		if [ -z "$SOURCE_DIR" ] ; then
+		    SOURCE_DIR="$1"
+		    shift;
+		elif [ -z "$BUILD_DIR" ] ; then
+		    BUILD_DIR="$1"
+		    shift
+		else
+		    echo "$PROGRAM_NAME: Unknown parameter \"$1\""
+		    usage
+		    return 100
+                fi
+		;;
+	esac
+    done
+    echo "$@"
+}
+
+PROGRAM_NAME="$0"
+
+if ! process_args "$@"; then
+  exit $?
+fi
+
+if [ -z "$SOURCE_DIR" ] ; then
+  echo "$0: No source directory specified."
+  usage
+  exit 100
+fi
+
+DEFINITIONS="$DEFINITIONS -DCLANG_DIR=$CLANG_DIR -DCLANG_VERSION=$CLANG_VERSION $EXPORT_COMPILE_COMMANDS"
+if [ ! -d "$SOURCE_DIR" ] ; then
+  echo "$0: Putative source directory \"$SOURCE_DIRECTORY\" is not a directory after all."
+  exit 100
+fi
+SOURCE_DIR=$(cd $SOURCE_DIR; /bin/pwd)
+
+case "$BUILD_TYPE" in
+    "Debug"|"Release"|"RelWithDebInfo"|"MinSizeRel")
+	if [ -z "$BUILD_DIR" ] ; then
+	    BUILD_DIR=$BUILD_TYPE
+	fi
+	DEFINITIONS="$DEFINITIONS -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
+	;;
+    *)
+	echo "$0: Unknown build type $BUILD_TYPE"
+	exit 100
+	;;
+esac
+if [ -z "$BUILD_DIR" ] ; then
+    BUILD_DIR="$BUILD_TYPE"
+fi
+if [ -n "$ROLL_BUILD_DIR" ] ; then
+    rolldir "$BUILD_DIR"
+else
+    /bin/rm -rf "$BUILD_DIR"
+fi
+if ! mkdir -p "$BUILD_DIR" ; then
+    echo "$0: Cannot make build directory $BUILD_DIR"
+    exit 100
+fi
+CREATED=YES
+cd "$BUILD_DIR"
+
+CC=${CC} CXX=${CXX} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_DIR"
+
+#
+# Install the compile_commands.json file if necessary.
+#
+if [ -f compile_commands.json ] ; then
+  mkdir test/data2
+  cp compile_commands.json test/data2
+fi
