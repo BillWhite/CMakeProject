@@ -4,5 +4,5 @@
 /*
  * This is just an example of a public library definition.
  */
-std::string cmutil(int idx);
+std::string {{cookiecutter.mainlib}}(int idx);
 #endif /* {{cookiecutter.mainlib|upper}}_HPP */
