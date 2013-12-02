@@ -33,7 +33,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 if ("${BOOST_ROOT}" STREQUAL "")
   set (BOOST_ROOT "/usr/local/include/boost/boost_1_54_0")
 endif()
-if (${BOOST_VERSION} STREQUAL "")
+if ("${BOOST_VERSION}" STREQUAL "")
   set (BOOST_VERSION 1.54.0)
 endif()
 

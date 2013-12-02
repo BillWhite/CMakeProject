@@ -257,11 +257,4 @@ CREATED=YES
 cd "$BUILD_DIR"
 
 CC=${CC} CXX=${CXX} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_DIR"
-
-#
-# Install the compile_commands.json file if necessary.
-#
-if [ -f compile_commands.json ] ; then
-  mkdir test/data2
-  cp compile_commands.json test/data2
-fi
+touch ".buildroot($BUILD_TYPE)"
