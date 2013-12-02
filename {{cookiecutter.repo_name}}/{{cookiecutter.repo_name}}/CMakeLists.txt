@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
-project ({{cookiecutter.default_project_name}} C CXX)
+project ({{cookiecutter.repo_name}} C CXX)
 
 ########################################################################
 #
@@ -46,13 +46,13 @@ include_directories(${Boost_INCLUDE_DIRS})
 # Project metadata.
 #
 ########################################################################
-set ({{cookiecutter.default_project_name}}_VERSION_MAJOR 0.1)
-set ({{cookiecutter.default_project_name}}_VERSION_MINOR 0.1)
-set ({{cookiecutter.default_project_name}}_VERSION_PATCH 0.1)
+set ({{cookiecutter.repo_name}}_VERSION_MAJOR 0.1)
+set ({{cookiecutter.repo_name}}_VERSION_MINOR 0.1)
+set ({{cookiecutter.repo_name}}_VERSION_PATCH 0.1)
 
 configure_file (
-  "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.default_project_name}}Config.h.in"
-  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.default_project_name}}Config.h"
+  "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.repo_name}}Config.h.in"
+  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}Config.h"
   )
 
 ########################################################################

@@ -1,0 +1,93 @@
+#!/bin/sh
+
+getarg() {
+    local AFFIX="$1"
+    local PARM="$2"
+    local R
+    R=$(echo "$PARM" | sed "s/$AFFIX//")
+    echo "$R"
+}
+
+find_project_root() {
+    local LAST_DIR="/dev/null"
+    local THIS_DIR="$(/bin/pwd)"
+    while [ "$THIS_DIR" != "$LAST_DIR" ]; do
+	CANDIDATE="$THIS_DIR/.projectroot"
+	if [ -f "$CANDIDATE" ] ; then
+	    echo "$THIS_DIR"
+	    exit 0
+	fi
+	LAST_DIR="$THIS_DIR"
+	THIS_DIR="$(cd $THIS_DIR/..; /bin/pwd)"
+    done
+}
+
+while [ -z "$DONE" ]; do
+    if [ -z "$1" ] ; then
+	DONE=YES
+    else
+	ARG="$1"
+	shift
+	case "$ARG" in
+	    --#)
+		set -x
+		;;
+	    --source)
+		TYPE=SOURCE
+		marker=".sourceroot"
+		;;
+	    --project)
+		TYPE=PROJECT
+		;;
+	    --build=*)
+	        TYPE=BUILD
+		RELEASE=$(getarg --build= "$ARG")
+		marker=".buildroot($RELEASE)"
+		;;
+	    --)
+		CMD_ARGS="$@"
+		DONE=YES
+		;;
+	    "")
+		DONE=YES
+		;;
+	    *)
+		echo "$0: Unknown command line parameter \"$ARG\""
+		exit 1
+		;;
+	esac
+    fi
+done
+
+PROOT=$(find_project_root)
+# echo "PROOT=$PROOT"
+DONE=
+if [ -z "$PROOT" ] ; then
+  echo "$0: Can't find the project root"
+  exit 1
+fi
+cd "$PROOT"
+if [ -n "$marker" ] ; then
+    for file in . *; do
+	if [ -d "$file" ] && [ -f "$file/$marker" ] ; then
+	    cd $file
+	    DONE=YES
+	    break
+	fi
+    done
+else
+    DONE=YES
+fi
+
+if [ -z "$DONE" ] ; then
+    echo "$0: Can't find $TYPE folder"
+    exit 1
+fi
+
+if [ -n "$CMD_ARGS" ] ; then
+    exec $CMD_ARGS
+else
+    /bin/pwd
+fi
+
+
