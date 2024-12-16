@@ -1,13 +1,23 @@
 {
+    "project_name" : "Default Project",
 	"full_name": "Bill White",
 	"email": "bill.white@griggsinst.com",
 	"github_username": "BillWhite",
-	"repo_name": "default_project",
+    "remote_url" : "None",
+    "repo_name" : "{%- if cookiecutter.remote_url == 'None' -%}{{ cookiecutter.project_name|replace('+', 'p')|slugify }}{% else %}{{ cookiecutter.remote_url.split('/')[-1]|replace('.git', '')}}{%- endif -%}",
 	"mainapp": "cmapp1",
 	"mainlib": "cmutil",
 	"project_short_description": "A Template for CMake projects with Catch2 Test Support",
 	"c_compiler":"clang",
 	"cpp_compiler":"clang++",
 	"cmake_generator": "Ninja",
+    "readthedocs": ["Yes", "No"],
+    "doxygen": ["Yes", "No"],
+    "cxx_minimum_standard": ["11", "14", "17", "20"],
+    "_extensions": [
+        "local_extensions.PrecommitExtension",
+        "local_extensions.ShortcutExtension",
+        "local_extensions.CurrentDateExtension"
+    ],
 	"install_prefix":"/usr/local"
 }

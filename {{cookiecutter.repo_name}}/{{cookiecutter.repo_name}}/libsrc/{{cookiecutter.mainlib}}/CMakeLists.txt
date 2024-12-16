@@ -28,7 +28,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include include)
 #
 ########################################################################
 add_library({{cookiecutter.mainlib}} ${SOURCES})
-target_link_libraries({{cookiecutter.mainlib}} ${LIBRARIES}})
+target_link_libraries({{cookiecutter.mainlib}} ${LIBRARIES})
 
 #
 # Install the main library in /lib/.

@@ -15,6 +15,9 @@
 *.la
 *.a
 
+# Python cache files.
+__pycache__/
+
 # This is the name of the default project.  We don't
 # really ever want to commit this.
 default_project
