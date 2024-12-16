@@ -9,19 +9,18 @@ set (TEST_SOURCES {{cookiecutter.mainapp}}_test.cpp)
 #
 # If your application tests needs to link against some other
 # libraries, like maybe the libraries in this project, include them
-# here.  The gtest and gmock include paths are already configured.
-# The gtest libraries are in ${GTEST_LIBS}.  The gmock libraries
-# are in ${GMOCK_LIBS}.  Include the ones you want here.
+# here.
 #
 ########################################################################
-set (TEST_LIBRARIES    ${GMOCK_LIBS} {{cookiecutter.mainlib}})
+set (TEST_LIBRARIES {{cookiecutter.mainlib}})
 
 ########################################################################
 #
-# Configure the tests.
+# Compile the tests.
 #
 ########################################################################
-configureTargetForCompilation({{cookiecutter.mainapp}}_test "${TEST_LIBRARIES}" "${TEST_SOURCES}")
+add_executable({{cookiecutter.mainapp}}_test ${TEST_SOURCES})
+target_link_libraries({{cookiecutter.mainapp}}_test ${TEST_LIBRARIES})
 
 ########################################################################
 #

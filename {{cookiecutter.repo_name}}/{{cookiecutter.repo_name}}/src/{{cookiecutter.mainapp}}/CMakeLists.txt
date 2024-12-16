@@ -26,16 +26,11 @@ include_directories(${CMAKE_SOURCE_DIR}/include include)
 
 ########################################################################
 #
-# Configure it for compilation
-#
-########################################################################
-configureTargetForCompilation({{cookiecutter.mainapp}} "${LIBRARIES}" "${SOURCES}")
-
-########################################################################
-#
 # Make the main executable link with the main library.
 #
 ########################################################################
+add_executable({{cookiecutter.mainapp}} ${SOURCES})
+target_link_libraries({{cookiecutter.mainapp}} ${LIBRARIES})
 
 ########################################################################
 #

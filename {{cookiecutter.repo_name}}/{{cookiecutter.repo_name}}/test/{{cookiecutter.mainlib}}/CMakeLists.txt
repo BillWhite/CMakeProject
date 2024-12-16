@@ -9,15 +9,24 @@ set (TEST_SOURCES {{cookiecutter.mainlib}}_test.cpp)
 #
 # If your application tests needs to link against some other
 # libraries, like maybe the libraries in this project, include them
-# here.  The gtest and gmock include paths are already configured.
-# The gtest libraries are in ${GTEST_LIBS}.  The gmock libraries
-# are in ${GMOCK_LIBS}.  Include the ones you want here.
+# here.
 #
 ########################################################################
-set (TEST_LIBRARIES ${GMOCK_LIBS} {{cookiecutter.mainlib}})
+set (TEST_LIBRARIES {{cookiecutter.mainlib}})
 
-configureTargetForCompilation({{cookiecutter.mainlib}}_test "${TEST_LIBRARIES}" "${TEST_SOURCES}")
+########################################################################
+#
+# Compile the tests.
+#
+########################################################################
+add_executable({{cookiecutter.mainlib}}_test ${TEST_SOURCES})
+target_link_libraries({{cookiecutter.mainlib}}_test ${TEST_LIBRARIES})
 
+########################################################################
+#
+# Move the tests into testbin.
+#
+########################################################################
 set_property(TARGET {{cookiecutter.mainlib}}_test
 	     PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 
