@@ -1,4 +1,9 @@
 #!/bin/sh 
+########################################################################
+# Licensed under: {{ cookiecutter.license }}
+# See https://spdx.dev or LICENSE.md in this
+# project for the license text.
+########################################################################
 GENERATOR="{{cookiecutter.cmake_generator}}"
 BUILD_TYPE=Debug
 EXPORT_COMPILE_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
@@ -292,3 +297,4 @@ cd "$BUILD_DIR"
 
 CC=${CC} CXX=${CXX} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_DIR"
 touch ".buildroot($BUILD_TYPE)"
+

@@ -2,8 +2,15 @@
 #include "{{cookiecutter.mainapp}}/{{cookiecutter.mainapp}}.hpp"
 #include "{{cookiecutter.mainapp}}_private.hpp"
 #include <iostream>
+/************************************************************************
+ *  Copyright {{ current_year }} by the copyright holders
+ *  named in COPYING.md.
+ *
+ * Licensed under: {{ cookiecutter.license }}
+ * See https://spdx.dev or LICENSE.md in this
+ * project for the license text.
+ ************************************************************************/
 
-int
 main(int argc, char **argv)
 {
   std::cout << {{cookiecutter.mainapp|upper}}_PUBLIC_STRING << "\n";

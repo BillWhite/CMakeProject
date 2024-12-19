@@ -3,6 +3,7 @@
 	"full_name": "Bill White",
 	"email": "bill.white@griggsinst.com",
 	"github_username": "BillWhite",
+    "license": ["GPL-3.0-or-later", "MIT", "BSD-2-Clause", "GPL-3.0-only", "LGPL-3.0-only", "LGPL-3.0-or-later", "None"],
     "remote_url" : "None",
     "init_git_repository" : [ "Yes" , "No" ],
     "add_git_initial_files" : [ "Yes" , "No" ],

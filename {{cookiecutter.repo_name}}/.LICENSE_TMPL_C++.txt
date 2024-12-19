@@ -1,5 +1,3 @@
-#ifndef {{cookiecutter.mainlib|upper}}_HPP
-#define {{cookiecutter.mainlib|upper}}_HPP
 /************************************************************************
  * Copyright {{ current_year }} by the copyright holders
  * named in COPYING.md.
@@ -8,11 +6,3 @@
  * See https://spdx.dev or LICENSE.md in this
  * project for the license text.
  ************************************************************************/
-
-#include <string>
-
-/*
- * This is just an example of a public library definition.
- */
-std::string {{cookiecutter.mainlib}}(int idx);
-#endif /* {{cookiecutter.mainlib|upper}}_HPP */

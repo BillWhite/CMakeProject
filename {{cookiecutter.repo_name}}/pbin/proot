@@ -1,5 +1,9 @@
 #!/bin/sh
-
+########################################################################
+# Licensed under: {{ cookiecutter.license }}
+# See https://spdx.dev or LICENSE.md in this
+# project for the license text.
+########################################################################
 getarg() {
     local AFFIX="$1"
     local PARM="$2"
@@ -89,5 +93,4 @@ if [ -n "$CMD_ARGS" ] ; then
 else
     /bin/pwd
 fi
-
 
