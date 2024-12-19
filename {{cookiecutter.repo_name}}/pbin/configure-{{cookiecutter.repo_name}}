@@ -3,6 +3,8 @@ GENERATOR="{{cookiecutter.cmake_generator}}"
 BUILD_TYPE=Debug
 EXPORT_COMPILE_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 ROLL_BUILD_DIR=YES
+CXX=c++
+CC=cc
 
 usage() {
     echo "Usage: $0 [options...] source_directory [build_directory]"
@@ -10,9 +12,17 @@ usage() {
     echo "  -G generator      Set the CMake generator type."
     echo "  -D NAME=Value     Define a CMake value."
     echo "  -DNAME=Value      Define a CMake value (one argument.)"
-    echo "  --build_type type Use the given build type.  The usual"
+    echo "  --build-type type Use the given build type.  The usual"
     echo "                    CMake build types are possible: Debug,"
     echo "                    Release, etc."
+    echo "  --short-build-dir We usually append the multiarch triple to the build"
+    echo "                    type name to get the build directory name."
+    echo "                    We use the definition of CXX for this, but"
+    echo "                    the notion of build triple is not actually"
+    echo "                    very well defined. So you may find it better"
+    echo "                    to just use the build type. In any case,"
+    echo "                    if the build dir is given on the command line"
+    echo "                    it is used as given exactly."
     echo "  --local-configuration FILE"
     echo "                    Read command line parameters from the"
     echo "                    given file.  These are processed when"
@@ -135,6 +145,16 @@ process_args() {
 		        fi
 		        shift
 		        ;;
+            --cpp-compiler)
+                shift
+                export CXX="$1"
+                shift
+                ;;
+            --c-compiler)
+                shift
+                export CC="$1"
+                shift
+                ;;
 	        --host-configuration)
 		        shift
 		        HCARGS="$(find_config_args $(hostname))"
@@ -161,6 +181,10 @@ process_args() {
 		        BUILD_TYPE="$1"
 		        shift
 		        ;;
+            --short-build-dir)
+                SHORT_BUILD_DIR=YES
+                shift
+                ;;
 	        -G)
 		        shift
 		        GENERATOR="$1"
@@ -231,7 +255,12 @@ DEFINITIONS="$DEFINITIONS $EXPORT_COMPILE_COMMANDS"
 case "$BUILD_TYPE" in
     "Debug"|"Release"|"RelWithDebInfo"|"MinSizeRel")
 	    if [ -z "$BUILD_DIR" ] ; then
-	        BUILD_DIR=$BUILD_TYPE
+            if [ -n "${SHORT_BUILD_DIR}" ] ; then
+	            BUILD_DIR=$BUILD_TYPE
+            else
+                BUILD_ARCH="$(${CXX} --print-multiarch)"
+                BUILD_DIR="$BUILD_TYPE@$BUILD_ARCH"
+            fi
 	    fi
 	    DEFINITIONS="$DEFINITIONS -DCMAKE_BUILD_TYPE=$BUILD_TYPE"
 	    ;;
@@ -241,7 +270,13 @@ case "$BUILD_TYPE" in
 	    ;;
 esac
 if [ -z "$BUILD_DIR" ] ; then
-    BUILD_DIR="$BUILD_TYPE"
+    set -x
+    if [ -n "$SHORT_BUILD_DIR" ] ; then
+        BUILD_DIR="$BUILD_TYPE"
+    else
+        BUILD_ARCH="$(${CXX} --print-multiarch)"
+        BUILD_DIR="${BUILD_DIR}@${BUILD_ARCH}"
+    fi
 fi
 if [ -n "$ROLL_BUILD_DIR" ] ; then
     rolldir "$BUILD_DIR"

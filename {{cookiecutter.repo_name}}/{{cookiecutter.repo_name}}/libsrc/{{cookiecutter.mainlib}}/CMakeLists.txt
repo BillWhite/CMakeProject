@@ -16,11 +16,12 @@ set (LIBRARIES "")
 
 ########################################################################
 #
-# Set the include directory.  The include path for this project
-# are the inherited ones, and private includes for this library.
+# Set the include directory. The public include directory is
+# already added, so just include the private include directory
+# right here.
 #
 ########################################################################
-include_directories(${PROJECT_SOURCE_DIR}/include include)
+include_directories(include)
 
 ########################################################################
 #

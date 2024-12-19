@@ -1,9 +1,9 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.9)
 project ({{cookiecutter.repo_name}} C CXX)
 
-option(USE_BOOST "Use the boost library" OFF)
-set(BOOST_MINIMUM_VERSION 1.54.0)
-
+option(USE_BOOST "Use the boost library." OFF)
+option(BUILD_TESTING "Build the tests." ON)
+cmake_policy(SET CMP0135 NEW)
 ########################################################################
 #
 # Delete this BOOST section if you don't want BOOST.  (Who doesn't
@@ -15,6 +15,7 @@ set(BOOST_MINIMUM_VERSION 1.54.0)
 #
 ########################################################################
 if (${USE_BOOST}) 
+   set(BOOST_MINIMUM_VERSION 1.54.0)
    set(Boost_USE_STATIC_LIBS OFF)
    set(Boost_USE_MULTITHREADED OFF)
    set(Boost_USE_STATIC_RUNTIME OFF)
@@ -39,18 +40,36 @@ set ({{cookiecutter.repo_name}}_VERSION_MINOR 0.1)
 set ({{cookiecutter.repo_name}}_VERSION_PATCH 0.1)
 
 configure_file (
-  "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.repo_name}}Config.h.in"
-  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}Config.h"
+  "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.repo_name}}-Config.h.in"
+  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}-Config.h"
   )
 
 ########################################################################
 #
-# Delete this line if you don't want ctest.  Who doesn't want
-# easy testing?
+# Set the include directory. These are the public includes.
 #
 ########################################################################
-enable_testing()
-add_subdirectory(libsrc)
-add_subdirectory(src)
-add_subdirectory(test)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
+########################################################################
+#
+# Compile the libraries.
+#
+########################################################################
+add_subdirectory(libsrc)
+########################################################################
+#
+# Compile the applications.
+#
+########################################################################
+add_subdirectory(src)
+
+########################################################################
+#
+# Build the tests.
+#
+########################################################################
+if (BUILD_TESTING)
+   enable_testing()
+   add_subdirectory(test)
+endif()

@@ -1,3 +1,6 @@
+"""
+Local extensions for cookiecutter.
+"""
 import datetime
 
 from jinja2.ext import Extension
@@ -6,19 +9,23 @@ from jinja2.ext import Extension
 # Export the current date
 #
 
+
 class CurrentDateExtension(Extension):
+    """Get the current date."""
+
     def __init__(self, environment):
+        """Initialize the extension.."""
         super().__init__(environment)
 
         environment.globals.update({
             "current_year": datetime.datetime.utcnow().year
         })
 
+        
 #
 # Check whether we have pre-commit or not and make the result available
 # as a template variable 'have_precommit'
 #
-
 try:
     import pre_commit
     have_precommit = True
@@ -40,9 +47,8 @@ class PrecommitExtension(Extension):
 # usage of these is e.g. {{ cookiecutter|modname }}. I don't see a way around
 # passing the cookiecutter dictionary as data input currently
 #
-
 def _modname(data):
-    return data["project_slug"].replace("-", "")
+    return data["repo_name"].replace("-", "")
 
 
 def _is_github(data):

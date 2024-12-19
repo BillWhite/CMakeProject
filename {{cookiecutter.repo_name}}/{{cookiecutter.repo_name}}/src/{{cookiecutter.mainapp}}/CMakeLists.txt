@@ -1,6 +1,8 @@
 ########################################################################
 #
-# Enumerate the source files.
+# This CMakeLists.txt file is for configuring a single library.
+# 
+# First, enumerate the source files.
 #
 ########################################################################
 set (SOURCES {{cookiecutter.mainapp}}.cpp)
@@ -11,18 +13,16 @@ set (SOURCES {{cookiecutter.mainapp}}.cpp)
 # them here.
 #
 ########################################################################
-set (LIBRARIES "{{cookiecutter.mainlib}}")
+set (LIBRARIES {{cookiecutter.mainlib}})
 
 ########################################################################
 #
-# Set the include directories.  By default we include in main
-# include directory, the system directories set by the compiler
-# configuration (which are not listed here) and the include
-# directory in this folder.  Files in this latter folder are
-# private to this application.
+# Set the include directory. The public include directory is
+# already added, so just include the private include directory
+# right here.
 #
 ########################################################################
-include_directories(${CMAKE_SOURCE_DIR}/include include)
+include_directories(include)
 
 ########################################################################
 #

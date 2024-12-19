@@ -1,7 +1,7 @@
-#include <iostream>
-#include "{{cookiecutter.mainlib}}/public.hpp"
-#include "{{cookiecutter.mainapp}}/public.hpp"
+#include "{{cookiecutter.mainlib}}/{{cookiecutter.mainlib}}.hpp"
+#include "{{cookiecutter.mainapp}}/{{cookiecutter.mainapp}}.hpp"
 #include "{{cookiecutter.mainapp}}_private.hpp"
+#include <iostream>
 
 int
 main(int argc, char **argv)

@@ -1,27 +1,24 @@
 ########################################################################
 #
-# These are the sources used by this test.
+# Define the test execuables.
+#
+# First, define the sources.
 #
 ########################################################################
-set (TEST_SOURCES {{cookiecutter.mainlib}}_test.cpp)
+set (TEST_SOURCES {{cookiecutter.mainlib}}_test1.cpp)
 
 ########################################################################
 #
-# If your application tests needs to link against some other
-# libraries, like maybe the libraries in this project, include them
-# here.
+# Then, define the executables.
 #
 ########################################################################
-set (TEST_LIBRARIES {{cookiecutter.mainlib}})
+add_executable({{cookiecutter.mainlib}}_test
+               ${TEST_SOURCES})
+target_link_libraries({{cookiecutter.mainlib}}_test
+                      {{cookiecutter.mainlib}}
+                      GTest::gtest_main)
 
-########################################################################
-#
-# Compile the tests.
-#
-########################################################################
-add_executable({{cookiecutter.mainlib}}_test ${TEST_SOURCES})
-target_link_libraries({{cookiecutter.mainlib}}_test ${TEST_LIBRARIES})
-
+gtest_discover_tests({{cookiecutter.mainlib}}_test)
 ########################################################################
 #
 # Move the tests into testbin.
@@ -29,8 +26,6 @@ target_link_libraries({{cookiecutter.mainlib}}_test ${TEST_LIBRARIES})
 ########################################################################
 set_property(TARGET {{cookiecutter.mainlib}}_test
 	     PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
-
-add_test(NAME {{cookiecutter.mainlib}}
-	 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-	 COMMAND ${PROJECT_BINARY_DIR}/testbin/{{cookiecutter.mainlib}}_test
-	 COMMENT Testing {{cookiecutter.mainlib}} with gtest)
+add_test(NAME     {{cookiecutter.mainlib}}_ctest
+         COMMAND  ${CMAKE_BINARY_DIR}/testbin/{{cookiecutter.mainlib}}_test)
+         

@@ -1,5 +1,7 @@
+#include <string>
 #include <sstream>
-#include "{{cookiecutter.mainlib}}/public.hpp"
+
+#include "{{cookiecutter.mainlib}}/{{cookiecutter.mainlib}}.hpp"
 #include "{{cookiecutter.mainlib}}_private.hpp"
 
 std::string

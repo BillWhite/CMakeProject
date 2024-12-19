@@ -1,26 +1,24 @@
 ########################################################################
 #
-# These are the sources used by this test.
+# Define the test execuables.
+#
+# First, define the sources.
 #
 ########################################################################
 set (TEST_SOURCES {{cookiecutter.mainapp}}_test.cpp)
 
 ########################################################################
 #
-# If your application tests needs to link against some other
-# libraries, like maybe the libraries in this project, include them
-# here.
+# Then, define the executables.
 #
 ########################################################################
-set (TEST_LIBRARIES {{cookiecutter.mainlib}})
+add_executable({{cookiecutter.mainapp}}_test
+               {{cookiecutter.mainapp}}_test.cpp)
+target_link_libraries({{cookiecutter.mainapp}}_test
+                      {{cookiecutter.mainlib}}
+                       GTest::gtest_main)
 
-########################################################################
-#
-# Compile the tests.
-#
-########################################################################
-add_executable({{cookiecutter.mainapp}}_test ${TEST_SOURCES})
-target_link_libraries({{cookiecutter.mainapp}}_test ${TEST_LIBRARIES})
+gtest_discover_tests({{cookiecutter.mainapp}}_test)
 
 ########################################################################
 #
@@ -29,10 +27,8 @@ target_link_libraries({{cookiecutter.mainapp}}_test ${TEST_LIBRARIES})
 ########################################################################
 set_property(TARGET {{cookiecutter.mainapp}}_test
 	     PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
+add_test(NAME    {{cookiecutter.mainapp}}_ctest
+         COMMAND ${CMAKE_BINARY_DIR}/testbin/{{cookiecutter.mainapp}}_test)
 
-add_test(NAME {{cookiecutter.mainapp}}
-	 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test
-	 COMMAND ${PROJECT_BINARY_DIR}/testbin/{{cookiecutter.mainapp}}_test
-	 COMMENT Testing {{cookiecutter.mainapp}} with gtest)
 
 
