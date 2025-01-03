@@ -8,9 +8,10 @@
  * See https://spdx.dev or LICENSE.md in this
  * project for the license text.
  ************************************************************************/
-
-/*
- * This is just an example of a public application definition.
+/**
+ * @file {{cookiecutter.mainapp}}.hpp
+ *
+ * Include file to demonstrate a public main function.
  */
 #define {{cookiecutter.mainapp|upper}}_PUBLIC_STRING "{{cookiecutter.mainapp|upper}}PublicString"
 

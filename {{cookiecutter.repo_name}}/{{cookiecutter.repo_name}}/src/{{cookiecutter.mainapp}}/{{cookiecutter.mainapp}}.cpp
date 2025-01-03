@@ -10,6 +10,11 @@
  * See https://spdx.dev or LICENSE.md in this
  * project for the license text.
  ************************************************************************/
+/**
+ * @file {{cookiecutter.mainapp}}.cpp
+ *
+ * This demonstrates the implementation of a main function.
+ */
 
 main(int argc, char **argv)
 {

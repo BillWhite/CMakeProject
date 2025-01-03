@@ -48,9 +48,21 @@ set ({{cookiecutter.repo_name}}_VERSION_MAJOR 0.1)
 set ({{cookiecutter.repo_name}}_VERSION_MINOR 0.1)
 set ({{cookiecutter.repo_name}}_VERSION_PATCH 0.1)
 
+########################################################################
+#
+# Configuration variables:
+#     1. for C++ consumption.
+#     2. for Doxygen.
+#
+########################################################################
 configure_file (
-  "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.repo_name}}-Config.h.in"
-  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}-Config.h"
+  "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.repo_name}}-config.h.in"
+  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}-config.h"
+  )
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/doc/doxygen/Doxygen.conf.in"
+  "${PROJECT_BINARY_DIR}/doc/doxygen/Doxygen.conf"
   )
 
 ########################################################################

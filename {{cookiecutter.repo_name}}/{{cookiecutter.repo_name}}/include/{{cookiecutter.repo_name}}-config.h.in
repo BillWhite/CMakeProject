@@ -14,15 +14,8 @@
  * 
  * Configuration values for project {{cookiecutter.repo_name}}.
  */
-// the configured options and settings for {{cookiecutter.repo_name}}
 #define {{cookiecutter.repo_name}}_VERSION_MAJOR @{{cookiecutter.repo_name}}_VERSION_MAJOR@
 #define {{cookiecutter.repo_name}}_VERSION_MINOR @{{cookiecutter.repo_name}}_VERSION_MINOR@
-
-/*
- * These are sometimes useful, and easy to provide.
- */
-#define CLANG_DIR="@CLANG_DIR@"
-#define CLANG_VERSION="@CLANG_VERSION@"
 
 #endif /* ${{cookiecutter.repo_name|upper}}_CONFIG_H */
 

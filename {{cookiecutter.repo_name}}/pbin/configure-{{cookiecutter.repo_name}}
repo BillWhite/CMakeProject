@@ -97,26 +97,6 @@ find_file_in_path() {
     done
 }
 
-find_config_args () {
-    CFPATH="$ORIG_PROJPATH"
-    if [ -z "$CFPATH" ] ; then
-	    CFPATH="$HOME/lib/orig_proj:$HOME/lib/localconfigs"
-	    CFPATH="$CFPATH:$HOME/share/orig_proj:$HOME/share/localconfigs"
-    fi
-    result=$(find_file_in_path "$1" "$CFPATH")
-    if [ -f "$result" ] ; then
-	    echo $(cat "$result" | grep -v '^#' )
-	    return 0
-    else
-	    echo "$0: Can't find config file $1." > /dev/stderr
-	    echo "   Config path:" > /dev/stderr
-	    for d in "$(echo "$CFPATH" | tr ':' ' ')" ; do
-	        echo "      $d" > /dev/stderr
-	    done
-	    return 100
-    fi
-}
-
 rolldir() {
     idx=0
     while [ $(($idx < 100)) = 1 ] && [ -d "$1.~${idx}~" ] ; do
@@ -140,16 +120,6 @@ process_args() {
 		        shift
 		        set -x
 		        ;;
-	        --local-configuration)
-		        shift
-		        HCARGS="$(find_config_args "$1")"
-		        if [ $? = 0 ] ; then
-		            process_args $HCARGS
-		        else
-		            return 100
-		        fi
-		        shift
-		        ;;
             --cpp-compiler)
                 shift
                 export CXX="$1"
@@ -160,15 +130,6 @@ process_args() {
                 export CC="$1"
                 shift
                 ;;
-	        --host-configuration)
-		        shift
-		        HCARGS="$(find_config_args $(hostname))"
-		        if [ $? = 0 ] ; then
-		            process_args $HCARGS
-		        else
-		            return 100
-		        fi
-		        ;;
 	        --no-roll-build-dir)
 		        shift
 		        ROLL_BUILD_DIR=
@@ -293,8 +254,9 @@ if ! mkdir -p "$BUILD_DIR" ; then
     exit 100
 fi
 CREATED=YES
-cd "$BUILD_DIR"
-
-CC=${CC} CXX=${CXX} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_DIR"
-touch ".buildroot($BUILD_TYPE)"
-
+#
+# CD to the build directory and generate the build artifacts.
+#
+(cd "$BUILD_DIR"; \
+    CC=${CC} CXX=${CXX} cmake -G "$GENERATOR" $DEFINITIONS "$SOURCE_DIR";
+    touch ".buildroot($BUILD_TYPE)")
