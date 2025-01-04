@@ -13,6 +13,14 @@ project ({{cookiecutter.repo_name}} C CXX)
 option(USE_BOOST "Use the boost library." OFF)
 option(BUILD_TESTING "Build the tests." ON)
 cmake_policy(SET CMP0135 NEW)
+
+########################################################################
+#
+# definitions.
+#
+########################################################################
+string(REPLACE "-" "_" PROJECT_SLUG "{{ cookiecutter.repo_name|upper }}")
+
 ########################################################################
 #
 # Delete this BOOST section if you don't want BOOST.  (Who doesn't
@@ -44,20 +52,20 @@ endif()
 # Project metadata.
 #
 ########################################################################
-set ({{cookiecutter.repo_name}}_VERSION_MAJOR 0.1)
-set ({{cookiecutter.repo_name}}_VERSION_MINOR 0.1)
-set ({{cookiecutter.repo_name}}_VERSION_PATCH 0.1)
+set (PROJECT_VERSION_MAJOR 0.1)
+set (PROJECT_VERSION_MINOR 0.1)
+set (PROJECT_VERSION_PATCH 0.1)
 
 ########################################################################
 #
 # Configuration variables:
-#     1. for C++ consumption.
+#     1. for C++ consumption.  Use @PROJECT_SLUG@ in this file.
 #     2. for Doxygen.
 #
 ########################################################################
 configure_file (
   "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.repo_name}}-config.h.in"
-  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}-config.h"
+  "${PROJECT_BINARY_DIR}/include/{{cookiecutter.repo_name}}/{{cookiecutter.repo_name}}-config.h"
   )
 
 configure_file (
@@ -70,7 +78,7 @@ configure_file (
 # Set the include directory. These are the public includes.
 #
 ########################################################################
-include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_BINARY_DIR}/include)
 
 ########################################################################
 #

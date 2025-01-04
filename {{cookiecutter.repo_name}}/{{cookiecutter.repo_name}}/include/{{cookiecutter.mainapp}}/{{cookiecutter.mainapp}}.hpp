@@ -13,6 +13,10 @@
  *
  * Include file to demonstrate a public main function.
  */
+
+/**
+ * A utility string.
+ */
 #define {{cookiecutter.mainapp|upper}}_PUBLIC_STRING "{{cookiecutter.mainapp|upper}}PublicString"
 
 #endif   /* {{cookiecutter.mainapp|upper}}_HPP */

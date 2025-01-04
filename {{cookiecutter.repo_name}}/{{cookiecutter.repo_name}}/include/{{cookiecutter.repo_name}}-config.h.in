@@ -1,5 +1,5 @@
-#ifndef ${{cookiecutter.repo_name|upper}}_CONFIG_H
-#define ${{cookiecutter.repo_name|upper}}_CONFIG_H
+#ifndef @PROJECT_SLUG@_CONFIG_H
+#define @PROJECT_SLUG@_CONFIG_H
 /************************************************************************
  * Copyright {{ current_year }} by the copyright holders
  * named in COPYING.md.
@@ -14,8 +14,9 @@
  * 
  * Configuration values for project {{cookiecutter.repo_name}}.
  */
-#define {{cookiecutter.repo_name}}_VERSION_MAJOR @{{cookiecutter.repo_name}}_VERSION_MAJOR@
-#define {{cookiecutter.repo_name}}_VERSION_MINOR @{{cookiecutter.repo_name}}_VERSION_MINOR@
+#define @PROJECT_SLUG@_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define @PROJECT_SLUG@_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define @PROJECT_SLUG@_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
-#endif /* ${{cookiecutter.repo_name|upper}}_CONFIG_H */
+#endif /* !defined(@PROJECT_SLUG@_CONFIG_H) */
 

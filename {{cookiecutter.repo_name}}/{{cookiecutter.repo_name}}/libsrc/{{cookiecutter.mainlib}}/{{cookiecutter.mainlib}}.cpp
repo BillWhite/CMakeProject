@@ -17,6 +17,9 @@
 #include "{{cookiecutter.mainlib}}/{{cookiecutter.mainlib}}.hpp"
 #include "{{cookiecutter.mainlib}}_private.hpp"
 
+/**
+ * A utility function.
+ */
 std::string
 {{cookiecutter.mainlib}}(int idx)
 {

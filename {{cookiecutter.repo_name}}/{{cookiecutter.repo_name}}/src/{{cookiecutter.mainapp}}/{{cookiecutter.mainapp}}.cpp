@@ -16,6 +16,10 @@
  * This demonstrates the implementation of a main function.
  */
 
+/**
+ * The main function.
+ */
+int
 main(int argc, char **argv)
 {
   std::cout << {{cookiecutter.mainapp|upper}}_PUBLIC_STRING << "\n";

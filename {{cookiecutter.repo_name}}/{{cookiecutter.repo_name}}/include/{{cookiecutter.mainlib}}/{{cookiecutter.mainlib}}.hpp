@@ -8,7 +8,7 @@
  * See https://spdx.dev or LICENSE.md in this
  * project for the license text.
  ************************************************************************/
-/*
+/**
  * @file {{cookiecutter.mainlib}}.hpp
  *
  * Include file to demonstrate a public library function.
@@ -16,5 +16,8 @@
  
 #include <string>
 
+/**
+ * A utility function.
+ */
 std::string {{cookiecutter.mainlib}}(int idx);
 #endif /* {{cookiecutter.mainlib|upper}}_HPP */
