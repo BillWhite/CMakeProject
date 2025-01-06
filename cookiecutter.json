@@ -1,7 +1,7 @@
 {
 	"full_name": "Bill White",
 	"email": "bill.white@griggsinst.com",
-	"github_username": "BillWhite",
+	"git_repository_username": "poppa",
     "project_name" : "Default Project",
     "project_slug" : "{{cookiecutter.project_name|replace('+', 'p')|slugify }}",
     "project_release" : "0.0.1",
