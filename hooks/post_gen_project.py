@@ -64,10 +64,10 @@ def conditional_remove(condition, path):
         else:
             rmtree(path)
 
-conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/.readthedocs.yml")
-conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/conf.py")
-conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/index.rst")
-conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/requirements-rtd.txt")
+conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/source/.readthedocs.yml")
+conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/source/conf.py")
+conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/source/index.rst")
+conditional_remove("{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc/source/requirements-rtd.txt")
 conditional_remove("{{ cookiecutter.doxygen }}" == "No" and "{{ cookiecutter.readthedocs }}" == "No", "{{cookiecutter.repo_name}}/doc")
 conditional_remove(os.stat("{{cookiecutter.repo_name}}/TODO.md").st_size == 0, "{{cookiecutter.repo_name}}/TODO.md")
 

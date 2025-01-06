@@ -10,7 +10,7 @@
  ************************************************************************/
 
 /**
- * @file {{cookiecutter.repo_name}}.h
+ * @file {{cookiecutter.project_slug}}-config.h
  * 
  * Configuration values for project {{cookiecutter.repo_name}}.
  */

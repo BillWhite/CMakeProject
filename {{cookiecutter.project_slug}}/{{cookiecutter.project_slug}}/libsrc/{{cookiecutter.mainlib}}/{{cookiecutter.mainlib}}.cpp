@@ -13,7 +13,7 @@
  */
 #include <string>
 #include <sstream>
-#include "{{cookiecutter.repo_name}}/default-project-config.h"
+#include "{{cookiecutter.project_slug}}/default-project-config.h"
 #include "{{cookiecutter.mainlib}}/{{cookiecutter.mainlib}}.hpp"
 #include "{{cookiecutter.mainlib}}_private.hpp"
 
