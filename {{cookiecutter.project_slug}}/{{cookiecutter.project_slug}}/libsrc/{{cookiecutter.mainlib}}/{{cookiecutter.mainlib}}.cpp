@@ -11,11 +11,11 @@
  *
  * This demonstrates the implementation of a library function.
  */
-#include <string>
-#include <sstream>
-#include "{{cookiecutter.project_slug}}/default-project-config.h"
+#include "{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}-config.h"
 #include "{{cookiecutter.mainlib}}/{{cookiecutter.mainlib}}.hpp"
 #include "{{cookiecutter.mainlib}}_private.hpp"
+#include <sstream>
+#include <string>
 
 /**
  * A utility function.
@@ -24,6 +24,13 @@ std::string
 {{cookiecutter.mainlib}}(int idx)
 {
   std::ostringstream str;
-  str << "{{cookiecutter.mainlib}}: " << idx;
+  str << "Version: "
+      << {{ cookiecutter.project_slug|upper|replace("-","_") }}_VERSION_MAJOR
+      << "."
+      << {{ cookiecutter.project_slug|upper|replace("-","_") }}_VERSION_MINOR
+      << "."
+      << {{ cookiecutter.project_slug|upper|replace("-","_") }}_VERSION_PATCH
+      << std::endl;
+  str << "{{cookiecutter.mainlib}}: " << idx << std::endl;
   return str.str();
 }

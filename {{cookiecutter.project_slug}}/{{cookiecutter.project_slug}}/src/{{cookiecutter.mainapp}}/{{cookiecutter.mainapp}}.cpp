@@ -23,7 +23,14 @@
 int
 main(int argc, char **argv)
 {
-  std::cout << {{cookiecutter.mainapp|upper}}_PUBLIC_STRING << "\n";
-  std::cout << {{cookiecutter.mainapp|upper}}_PRIVATE_STRING<< "\n";
-  std::cout << cmutil(100) << "\n";
+    std::cout
+        << {{ cookiecutter.project_slug|upper|replace("-","_") }}_VERSION_MAJOR 
+        << "."
+        << {{ cookiecutter.project_slug|upper|replace("-","_") }}_VERSION_MINOR
+        << "."
+        << {{ cookiecutter.project_slug|upper|replace("-","_") }}_VERSION_PATCH
+        << std::endl;
+    std::cout << {{cookiecutter.mainapp|upper}}_PUBLIC_STRING << std::endl;
+    std::cout << {{cookiecutter.mainapp|upper}}_PRIVATE_STRING<< std::endl;;
+    std::cout << {{ cookiecutter.mainlib }}(100) << std::endl;
 }

@@ -13,9 +13,9 @@ How to use
     You will be asked some questions.  The result will be a
     directory with some source code.  The name of the directory
     is the answer to one of the questions, but let's imagine it's
-    'default-project'.
-2.  cd defaul-_project
-3.  Run "default-project/pbin/configure-default-project"
+    '{{ cookiecutter.project-slug }}'.
+2.  cd {{ cookiecutter.project-slug }}
+3.  Run "{{ cookiecutter.project-slug }}/pbin/{{ cookiecutter.project-slug }}"
 
 The Directory Structore
 =======================
@@ -43,7 +43,7 @@ libraries, and only the UI code goes in the application area.
 
 The directories are:
 
-    project/                         This is the "repo_name" setting
+    project/                         This is the "project_slug" setting
                                      when the project is created.  The
                                      CMake source directory will be inside
                                      this directory.  This is a useful
@@ -63,8 +63,8 @@ The directories are:
                                      subdirectory for each library.
         libsrc/                      This is the source directory for
                                      libraries.  The CMakeList.txt file
-                                     for this directory has mostly
-                                     add_subdirectory commands, one for
+                                     for this directory has mostly configuration
+                                     and add_subdirectory commands, one for
                                      each library.
           somelib/                   All sources and CMakeFile.txt files
                                      for the library somelib go here.
@@ -74,6 +74,8 @@ The directories are:
                                      application sources.  All
                                      application sources and
                                      CMakeList.txt files go here.
+                                     As with libsrc, this mostly contains
+                                     add_directory commands.
           someapp/                   Source for the application someapp
                                      goes here.
             include/                 Include file files private to

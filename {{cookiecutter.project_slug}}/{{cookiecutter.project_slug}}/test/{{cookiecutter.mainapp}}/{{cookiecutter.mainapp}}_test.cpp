@@ -10,8 +10,7 @@
  * project for the license text.
  ************************************************************************/
 
-
 TEST({{cookiecutter.mainapp}}_Test, BasicAssertions) {
     std::string answer = {{ cookiecutter.mainlib }}(100);
-    EXPECT_STREQ(answer.c_str(), "{{cookiecutter.mainlib}}: 100");
+    EXPECT_STREQ(answer.c_str(), "Version: 0.0.1\n{{cookiecutter.mainlib}}: 100\n");
 }

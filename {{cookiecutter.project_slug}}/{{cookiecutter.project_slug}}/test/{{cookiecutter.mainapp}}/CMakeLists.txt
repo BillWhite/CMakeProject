@@ -35,8 +35,4 @@ gtest_discover_tests({{cookiecutter.mainapp}}_test)
 ########################################################################
 set_property(TARGET {{cookiecutter.mainapp}}_test
 	     PROPERTY RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
-add_test(NAME    {{cookiecutter.mainapp}}_ctest
-         COMMAND ${CMAKE_BINARY_DIR}/testbin/{{cookiecutter.mainapp}}_test)
-
-
 
