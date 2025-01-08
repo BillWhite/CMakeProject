@@ -6,11 +6,11 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'xyzzy'
-copyright = '2025, zyxxy'
-author = 'zyxxy'
-release = '0.0.1'
-
+project = '{{ cookiecutter.project_name }}'
+copyright = '2025, {{ cookiecutter.full_name}}'
+author = '{{cookiecutter.full_name}}'
+release = '{{cookiecutter.project_release}}'
+version = '{{cookiecutter.project_release}}'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 

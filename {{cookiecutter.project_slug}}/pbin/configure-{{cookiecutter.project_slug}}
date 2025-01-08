@@ -1,9 +1,30 @@
-#!/bin/sh 
+#!/bin/sh
 ########################################################################
 # Licensed under: {{ cookiecutter.license }}
 # See https://spdx.dev or LICENSE.md in this
 # project for the license text.
 ########################################################################
+ECHO=
+# options may be followed by one colon to indicate they have a required argument
+# SHORT_OPTS here has u, h, d and e which take no arguments, and
+#            D, t and f which take one argument.
+# LONG_OPTS  lists the long options, with two dashes. This example takes
+#            user, host, debug and echo which take no arguments, and
+#            domain-list, cipher and outfile which all take one argument.
+# SHORT_OPTS="uhdeD:t:f:"
+# LONG_OPTS=" user,host,debug,echo,domain-list:,cipher:,outfile:
+SHORT_OPTS="G:D:h"
+LONG_OPTS="cpp-compiler,c-compiler,short-build-dir,no-compile-commands-export,roll-build-dir,no-roll-build-dir"
+if ! options=$(getopt -u -o "$SHORT_OPTS" -l "$LONG_OPTS" -- "$@")
+then
+    # something went wrong, getopt will put out an error message for us
+    exit 1
+fi
+
+set -- $options
+
+# Set state variables here.
+PROGRAM_NAME="$0"
 GENERATOR="{{cookiecutter.cmake_generator}}"
 BUILD_TYPE=Debug
 EXPORT_COMPILE_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
@@ -16,10 +37,9 @@ usage() {
     echo "Options:"
     echo "  -G generator      Set the CMake generator type."
     echo "  -D NAME=Value     Define a CMake value."
-    echo "  -DNAME=Value      Define a CMake value (one argument.)"
     echo "  --build-type type Use the given build type.  The usual"
     echo "                    CMake build types are possible: Debug,"
-    echo "                    Release, etc."
+    echo "                    Release, etc. The default is Debug."
     echo "  --short-build-dir We usually append the multiarch triple to the build"
     echo "                    type name to get the build directory name."
     echo "                    We use the definition of CXX for this, but"
@@ -28,23 +48,6 @@ usage() {
     echo "                    to just use the build type. In any case,"
     echo "                    if the build dir is given on the command line"
     echo "                    it is used as given exactly."
-    echo "  --local-configuration FILE"
-    echo "                    Read command line parameters from the"
-    echo "                    given file.  These are processed when"
-    echo "                    this option is encountered, and it is as"
-    echo "                    if the contents of the file were interpolated"
-    echo "                    where the option occurs.  The options in the"
-    echo "                    file can be on several lines.  This allows"
-    echo "                    different shared locations to have different"
-    echo "                    system configurations.  See the contents of"
-    echo "                    the directory localconfigs for examples."
-    echo "  --host-configuration"
-    echo "                    This is equivalend to:"
-    echo "                      --local-configuration $Plocalconfigs/$(hostname)"
-    echo "                    where P is some folder on the path found in the"
-    echo "                    environment variable:"
-    echo "                      ORIG_PROJPATH"
-    echo "                    This is the usual colon separated path variable."
     echo "  --no-compile-commands-export"
     echo "                    Don't export a compile_commands.json file."
     echo "  --roll-build-dir  If an old build directory exists, then"
@@ -54,6 +57,10 @@ usage() {
     echo "                    and by default, they are just deleted."
     echo "  --no-roll-build-dir"
     echo "                    Don't roll the build directories."
+    echo "  --cpp-compiler pathname"
+    echo "                    Set the name of the C++ compiler."
+    echo "  --c-compiler pathname"
+    echo "                    Set the name of the C compiler."
     echo "  --help            Help me, I'm melting."
     echo ""
 }
@@ -85,18 +92,6 @@ find_source_dir() {
     fi
 }
 
-find_file_in_path() {
-    local FILE="$1"
-    local FFP_PATH="$2"
-    for dir in $(echo "$FFP_PATH" | tr ':' ' '); do
-	    FFILE="$dir/$FILE"
-	    if [ -f  "$FFILE" ] ; then
-	        echo "$FFILE"
-	        return 0
-	    fi
-    done
-}
-
 rolldir() {
     idx=0
     while [ $(($idx < 100)) = 1 ] && [ -d "$1.~${idx}~" ] ; do
@@ -113,55 +108,49 @@ rolldir() {
 }
 
 process_args() {
-    local DONE
-    while [ -z "$DONE" ] ; do
-	    case "$1" in
-	        --#)
-		        shift
-		        set -x
-		        ;;
-            --cpp-compiler)
+    echo "$@"
+    while [ $# -gt 0 ]
+    do
+        case $1 in
+            "--cpp-compiler")
                 shift
                 export CXX="$1"
                 shift
                 ;;
-            --c-compiler)
+            "--c-compiler")
                 shift
                 export CC="$1"
                 shift
                 ;;
-	        --no-roll-build-dir)
+	        "--no-roll-build-dir")
 		        shift
 		        ROLL_BUILD_DIR=
 		        ;;
-	        --roll-build-dir)
+	        "--roll-build-dir")
 		        shift
 		        ROLL_BUILD_DIR=YES
 		        ;;
-            --no-compile-commands-export)
+            "--no-compile-commands-export")
 		        EXPORT_COMPILE_COMMANDS=""
 		        shift
 		        ;;
-	        --build-type)
+	        "--build-type")
 		        shift
 		        BUILD_TYPE="$1"
 		        shift
 		        ;;
-            --short-build-dir)
+            "--short-build-dir")
                 SHORT_BUILD_DIR=YES
                 shift
                 ;;
-	        -G)
+	        "-G")
 		        shift
 		        GENERATOR="$1"
 		        shift
 		        ;;
-	        -D*)
-		        DFN=$(echo "$1" | sed 's/^-D//')
-		        if [ -z "$DFN" ] ; then
-		            shift
-		            DFN = "$1"
-		        fi
+	        "-D")
+		        shift   
+		        DFN = "$1"
 		        DEFINITIONS="$DEFINITIONS -D$DFN"
 		        shift
 		        ;;
@@ -169,33 +158,32 @@ process_args() {
 		        usage
 	            return 100
 		        ;;
-	        -*)
-		        echo "$0: Unknown comand line parameter \"$1\""
+            (--)
+                shift
+                break
+                ;;
+            "-*")
+		        echo "$0: Unknown comand line parameter \"$1\"" 1.>2
 		        usage
 		        return 100
 		        ;;
-	        "")
-		        DONE=YES
-		        ;;
-	        *)
-		        if [ -z "$SOURCE_DIR" ] ; then
-		            SOURCE_DIR="$1"
-		            shift;
-		        elif [ -z "$BUILD_DIR" ] ; then
-		            BUILD_DIR="$1"
-		            shift
-		        else
-		            echo "$PROGRAM_NAME: Unknown parameter \"$1\""
-		            usage
-		            return 100
-                fi
-		        ;;
-	    esac
-    done
-    echo "$@"
+            (--) break;;
+        esac
+    done    
+    if [ -n "$1" ] ; then
+		if [ -z "$SOURCE_DIR" ] ; then
+		    SOURCE_DIR="$1"
+		    shift;
+		elif [ -z "$BUILD_DIR" ] ; then
+		    BUILD_DIR="$1"
+		    shift
+		else
+		    echo "$PROGRAM_NAME: Unknown parameter \"$1\""
+		    usage
+		    return 100
+        fi
+    fi
 }
-
-PROGRAM_NAME="$0"
 
 if ! process_args "$@"; then
     exit $?

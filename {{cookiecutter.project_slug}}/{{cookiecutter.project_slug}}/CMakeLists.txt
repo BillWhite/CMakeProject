@@ -22,49 +22,67 @@ cmake_policy(SET CMP0135 NEW)
 #
 ########################################################################
 set(PROJECT_SLUG "{{ cookiecutter.project_slug|upper|replace("-","_") }}")
-
-########################################################################
-#
-# Delete this BOOST section if you don't want BOOST.  (Who doesn't
-# want to use BOOST?)  I typically install more than one version
-# of BOOST, and put them in /usr/local/include/boost/boost_VERSION.
-# This can be configured with the pbin/configure_* file.
-#
-# Your needs may vary.
-#
-########################################################################
-if (${USE_BOOST}) 
-   set(BOOST_MINIMUM_VERSION 1.54.0)
-   set(Boost_USE_STATIC_LIBS OFF)
-   set(Boost_USE_MULTITHREADED OFF)
-   set(Boost_USE_STATIC_RUNTIME OFF)
-   if ("${BOOST_ROOT}" STREQUAL "")
-     set (BOOST_ROOT "/usr/local/include/boost/boost_1_54_0")
-   endif()
-   if ("${BOOST_VERSION}" STREQUAL "")
-     set (BOOST_VERSION 1.54.0)
-   endif()
-   find_package(Boost ${BOOST_VERSION} REQUIRED)
-
-   include_directories(${Boost_INCLUDE_DIRS}) 
-endif()
+set(PROJECT_RESOURCES_DIR "${PROJECT_SOURCE_DIR}/../resources")
 
 ########################################################################
 #
 # Configuration variables:
-#     1. for C++ consumption.  Use @PROJECT_SLUG@ in this file.
-#     2. for Doxygen.
+#     o for C++ consumption.  Use {{cookiecutter.project_slug}}
+#       for file names and @PROJECT_SLUG@ for C++ identifiers in this
+#       file.
+{%- if cookiecutter.doxygen == "Yes" %}
+#     o for Doxygen.
+{%- endif %}
+{%- if cookiecutter.readthedocs == "Yes" %}
+#     o for sphinx.
+{%- endif %}
 #
 ########################################################################
+#
+# C++ configuration include file.
+#
 configure_file (
   "${PROJECT_SOURCE_DIR}/include/{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}-config.h.in"
   "${PROJECT_BINARY_DIR}/include/{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}-config.h"
   )
 
+{%- if cookiecutter.doxygen == "Yes" %}
+#
+# Doxygen configure file and target.
+#
 configure_file (
   "${PROJECT_SOURCE_DIR}/doc/doxygen/Doxygen.conf.in"
   "${PROJECT_BINARY_DIR}/doc/doxygen/Doxygen.conf"
   )
+add_custom_target( doxygen
+                   COMMAND doxygen Doxygen.conf
+                   WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/doxygen)
+{%- endif %}
+
+{%- if cookiecutter.readthedocs == "Yes" %}
+#
+# Sphinx configure files and target.
+#
+configure_file (
+  "${PROJECT_RESOURCES_DIR}/sphinx/conf.py.in"
+  "${PROJECT_SOURCE_DIR}/doc/sphinx/conf.py"
+  )
+configure_file (
+  "${PROJECT_RESOURCES_DIR}/sphinx/Makefile.in"
+  "${PROJECT_SOURCE_DIR}/doc/sphinx/Makefile"
+  )
+configure_file (
+  "${PROJECT_RESOURCES_DIR}/sphinx/make.bat.in"
+  "${PROJECT_SOURCE_DIR}/doc/sphinx/make.bat"
+  )
+configure_file (
+  "${PROJECT_RESOURCES_DIR}/sphinx/index.rst.in"
+  "${PROJECT_SOURCE_DIR}/doc/sphinx/index.rst"
+  )
+add_custom_target( sphinx_html
+                   COMMAND make html
+                   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/doc/sphinx)
+{%- endif %}
 
 ########################################################################
 #
