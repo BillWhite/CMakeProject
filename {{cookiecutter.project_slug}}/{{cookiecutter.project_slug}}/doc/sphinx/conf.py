@@ -6,18 +6,18 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = '{{ cookiecutter.project_name }}'
-copyright = '2025, {{ cookiecutter.full_name }}'
-author = '{{ cookiecutter.full_name }}'
-release = '{{ cookiecutter.project_release }}'
+project = 'xyzzy'
+copyright = '2025, zyxxy'
+author = 'zyxxy'
+release = '0.0.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = []
 
-templates_path = ['_templates']
-exclude_patterns = []
+templates_path = ['.templates']
+exclude_patterns = ['.build', 'Thumbs.db', '.DS_Store']
 
 
 
@@ -25,4 +25,4 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'alabaster'
-html_static_path = ['_static']
+html_static_path = ['.static']
