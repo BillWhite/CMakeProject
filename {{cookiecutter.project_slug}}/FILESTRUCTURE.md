@@ -10,10 +10,14 @@ generated for you.
    - {{ cookiecutter.project_slug }}/{{ cookiecutter.project_slug }}/<br/>
       This is the source directory.
    - {{ cookiecutter.project_slug }}/pbin/</br>
-      This holds useful command for configuring projects.
-     - {{ cookiecutter.project_slug }}/pbin/configure-{{ cookiecutter.project_slug }}/<br/>
+      This holds useful command for working with projects.
+     - {{ cookiecutter.project_slug }}/pbin/configure-{{ cookiecutter.project_slug }}<br/>
         This shell command runs cmake with the proper arguments. Look
         at the comment in this file for more details.
+     - {{ cookiecutter.project_slug }}/pbin/{{ cookiecutter.project_slug }}-shell<br/>
+        This shell command starts a subshell with pbin put on the path, and
+        with some other environment variables set to interesting values.
+        Think of it as something like "poetry shell" in python.
      - {{ cookiecutter.project_slug }}/resources/<br/>
         This directory has resources that don't really belong in the
         source directory, but are needed for configuring things.

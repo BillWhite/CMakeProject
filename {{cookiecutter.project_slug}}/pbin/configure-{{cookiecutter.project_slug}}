@@ -167,7 +167,6 @@ process_args() {
 		        usage
 		        return 100
 		        ;;
-            (--) break;;
         esac
     done    
     if [ -n "$1" ] ; then
@@ -189,6 +188,12 @@ if ! process_args "$@"; then
     exit $?
 fi
 
+PROJECT_ROOT="$(find_project_root)"
+if [ -z "$PROJECT_ROOT" ] ; then
+    echo "Cannot find the project root."
+    exit 100
+fi
+cd "$PROJECT_ROOT"
 if [ -z "$SOURCE_DIR" ] ; then
     SOURCE_DIR="$(find_source_dir)"
 fi
@@ -224,7 +229,6 @@ case "$BUILD_TYPE" in
 	    ;;
 esac
 if [ -z "$BUILD_DIR" ] ; then
-    set -x
     if [ -n "$SHORT_BUILD_DIR" ] ; then
         BUILD_DIR="$BUILD_TYPE"
     else

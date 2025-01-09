@@ -16,50 +16,74 @@ find_project_root() {
     local LAST_DIR="/dev/null"
     local THIS_DIR="$(/bin/pwd)"
     while [ "$THIS_DIR" != "$LAST_DIR" ]; do
-	CANDIDATE="$THIS_DIR/.projectroot"
-	if [ -f "$CANDIDATE" ] ; then
-	    echo "$THIS_DIR"
-	    exit 0
-	fi
-	LAST_DIR="$THIS_DIR"
-	THIS_DIR="$(cd $THIS_DIR/..; /bin/pwd)"
+	    CANDIDATE="$THIS_DIR/.projectroot"
+	    if [ -f "$CANDIDATE" ] ; then
+	        echo "$THIS_DIR"
+	        exit 0
+	    fi
+	    LAST_DIR="$THIS_DIR"
+	    THIS_DIR="$(cd $THIS_DIR/..; /bin/pwd)"
     done
+}
+
+usage() {
+    echo "proot: Print directory navigation hints."
+    echo "       Also, execute commands in a build,"
+    echo "       source or project directory."
+    echo "Usage: proot [options...] [-- cmd args...]"
+    echo "Options:"
+    echo "  --#                  Debugging. set -x."
+    echo "  --source             Print the source directory."
+    echo "  --project            Print the project directory."
+    echo "  --build=RELEASE      Print the build directory for"
+    echo "                       the given release value."
+    echo "  --help               Print this text and exit."
+    echo "  -- cmd args          Execute the command in the"
+    echo "                       appropriate directory."
+    echo
+    echo "For example, in any subdirectory, executing"
+    echo "    proot --build= -- ninja"
+    echo "will run \"ninja\" in the given build directory."
 }
 
 while [ -z "$DONE" ]; do
     if [ -z "$1" ] ; then
-	DONE=YES
+	    DONE=YES
     else
-	ARG="$1"
-	shift
-	case "$ARG" in
-	    --#)
-		set -x
-		;;
-	    --source)
-		TYPE=SOURCE
-		marker=".sourceroot"
-		;;
-	    --project)
-		TYPE=PROJECT
-		;;
-	    --build=*)
-	        TYPE=BUILD
-		RELEASE=$(getarg --build= "$ARG")
-		marker=".buildroot($RELEASE)"
-		;;
-	    --)
-		CMD_ARGS="$@"
-		DONE=YES
-		;;
-	    "")
-		DONE=YES
-		;;
-	    *)
-		echo "$0: Unknown command line parameter \"$ARG\""
-		exit 1
-		;;
-	esac
+	    ARG="$1"
+	    shift
+	    case "$ARG" in
+            --help)
+                usage
+                exit 100
+                ;;
+	        --#)
+		        set -x
+		        ;;
+	        --source)
+		        TYPE=SOURCE
+		        marker=".sourceroot"
+		        ;;
+	        --project)
+		        TYPE=PROJECT
+		        ;;
+	        --build=*)
+	            TYPE=BUILD
+		        RELEASE=$(getarg --build= "$ARG")
+		        marker=".buildroot($RELEASE)"
+		        ;;
+	        --)
+		        CMD_ARGS="$@"
+		        DONE=YES
+		        ;;
+	        "")
+		        DONE=YES
+		        ;;
+	        *)
+		        echo "$0: Unknown command line parameter \"$ARG\""
+		        exit 1
+		        ;;
+	    esac
     fi
 done
 
@@ -67,17 +91,17 @@ PROOT=$(find_project_root)
 # echo "PROOT=$PROOT"
 DONE=
 if [ -z "$PROOT" ] ; then
-  echo "$0: Can't find the project root"
-  exit 1
+    echo "$0: Can't find the project root"
+    exit 1
 fi
 cd "$PROOT"
 if [ -n "$marker" ] ; then
     for file in . *; do
-	if [ -d "$file" ] && [ -f "$file/$marker" ] ; then
-	    cd $file
-	    DONE=YES
-	    break
-	fi
+	    if [ -d "$file" ] && [ -f "$file/$marker" ] ; then
+	        cd $file
+	        DONE=YES
+	        break
+	    fi
     done
 else
     DONE=YES
