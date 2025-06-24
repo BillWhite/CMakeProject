@@ -37,7 +37,7 @@ done
 
 # Skip the pbin.
 PROJECT_DIR="$(cd "$(dirname "$0")/.."; /bin/pwd)"
-/usr/bin/env PROJECT_NAME="{{ cookiecutter.project_name }}" \
+/usr/bin/env PROJECT_NAME="Solve the N Queens Problem." \
     PROJECT_DIR="$PROJECT_DIR" \
     VIRTUAL_ENV="$ENV_NAME" \
     PATH="$PROJECT_DIR/pbin:$PATH" /bin/bash
