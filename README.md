@@ -2,7 +2,7 @@ CMakeProject
 ============
 
 A cookiecutter template for C++ projects with CMake, using
-Catch2 for testing.
+Google GTest for testing.
 
 How to use
 ==========
@@ -13,9 +13,15 @@ How to use
     You will be asked some questions.  The result will be a
     directory with some source code.  The name of the directory
     is the answer to one of the questions, but let's imagine it's
-    '{{ cookiecutter.project-slug }}'.
-2.  cd {{ cookiecutter.project-slug }}
-3.  Run "{{ cookiecutter.project-slug }}/pbin/{{ cookiecutter.project-slug }}"
+    'SomeProject'.
+2.  cd SomeProject
+3.  Run "SomeProject/pbin/configure-SomeProject" to configure the
+    CMake build directory.
+4.  Run "SomeProject/pbin/SomeProject-shell" to start a shell with
+    the path set to include "SomeProject/pbin". This is slightly
+    helpful.
+5.  Run "SomeProject-shell --build" to build or "SomeProject-shell --test"
+    to test. You can combind --build and --test in one command.
 
 The Directory Structore
 =======================
