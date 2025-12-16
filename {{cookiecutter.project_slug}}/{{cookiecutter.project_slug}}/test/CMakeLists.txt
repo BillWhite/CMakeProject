@@ -1,8 +1,8 @@
 ########################################################################
-# Copyright {{ current_year }} by the copyright holders
+# Copyright 2025 by the copyright holders
 # named in COPYING.md.
 #
-# Licensed under: {{ cookiecutter.license }}
+# Licensed under: GPL-3.0-or-later
 # See https://spdx.dev or LICENSE.md in this
 # project for the license text.
 ########################################################################
@@ -23,7 +23,7 @@ include(CTest)
 include(FetchContent)
 FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+    URL https://github.com/google/googletest/archive/52eb8108c5bdec04579160ae17225d66034bd723.zip
 )
 set (gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
@@ -43,5 +43,5 @@ add_subdirectory(lib)
 # Be sure the name all the test targets here.
 #
 ########################################################################
-add_subdirectory({{cookiecutter.mainlib}})
-add_subdirectory({{cookiecutter.mainapp}})
+add_subdirectory(cmutil)
+add_subdirectory(cmapp1)

@@ -8,8 +8,8 @@ ECHO=
 #            domain-list, cipher and outfile which all take one argument.
 # SHORT_OPTS="uhdeD:t:f:"
 # LONG_OPTS=" user,host,debug,echo,domain-list:,cipher:,outfile:
-LONG_OPTS="environment:"
-SHORT_OPTS="E:"
+LONG_OPTS="environment:,help,short-build-type,build,test,shell"
+SHORT_OPTS="E:hBTS"
 if ! options=$(getopt -u -o "$SHORT_OPTS" -l "$LONG_OPTS" -- "$@")
 then
     # something went wrong, getopt will put out an error message for us
@@ -18,7 +18,72 @@ fi
 
 set -- $options
 
+find_project_root() {
+    local LAST_DIR="/dev/null"
+    local THIS_DIR="$(/bin/pwd)"
+    while [ "$THIS_DIR" != "$LAST_DIR" ]; do
+	CANDIDATE="$THIS_DIR/.projectroot"
+	if [ -f "$CANDIDATE" ] ; then
+	    echo "$THIS_DIR"
+        return
+	fi
+	LAST_DIR="$THIS_DIR"
+	THIS_DIR="$(cd $THIS_DIR/..; /bin/pwd)"
+    done
+}
+
+PROJECT_ROOT="$(find_project_root)"
+if [ -z "$PROJECT_ROOT" ] ; then
+    echo "Cannot find the project root."
+    exit 100
+fi
+cd "$PROJECT_ROOT"
+
 ENV_NAME="default"
+BUILD_TYPE=Debug
+DO_BUILD=
+DO_TEST=
+DO_SHELL=NO
+CXX=c++
+CC=cc
+
+find_project_root() {
+    local LAST_DIR="/dev/null"
+    local THIS_DIR="$(/bin/pwd)"
+    while [ "$THIS_DIR" != "$LAST_DIR" ]; do
+	CANDIDATE="$THIS_DIR/.projectroot"
+	if [ -f "$CANDIDATE" ] ; then
+	    echo "$THIS_DIR"
+        return
+	fi
+	LAST_DIR="$THIS_DIR"
+	THIS_DIR="$(cd $THIS_DIR/..; /bin/pwd)"
+    done
+}
+
+usage() {
+    echo "$0: configure for working on {{cookiecutter.project_slug}}"
+    echo "   Usage: {{cookiecutter.project_slug}}-shell [ options ] [ build_dir ]"
+    echo "   Options:"
+    echo "     -h|--help              Print help and quit."
+    echo "     --build-type type      Use the given build type.  The usual"
+    echo "                            CMake build types are possible: Debug,"
+    echo "                            Release, etc. The default is Debug."
+    echo "     --short-build-dir      We usually append the multiarch triple to the build"
+    echo "                            type name to get the build directory name."
+    echo "                            We use the definition of CXX for this, but"
+    echo "                            the notion of build triple is not actually"
+    echo "                            very well defined. So you may find it better"
+    echo "                            to just use the build type. In any case,"
+    echo "                            if the build dir is given on the command line"
+    echo "                            it is used as given exactly."
+    echo "      -B--build             Build the project. Only enter a shell if"
+    echo "                            --shell is present."
+    echo "      -T|--test             Test the project. Only enter a shell if"
+    echo "                            --shell is present."
+    echo "      -S|--shell            Run a shell, even if --build or --test are"
+    echo "                            present."
+}
 
 while [ $# -gt 0 ]
 do
@@ -28,16 +93,89 @@ do
             ENV_NAME="$1"
             shift
             ;;
-        (--)                 shift; break;;
+        (-h|--help)
+            usage
+            exit 1
+            ;;
+        (--build-type)
+            shift
+            BUILD_TYPE="$1"
+            ;;
+        (--short-build-dir)
+            shift
+            SHORT_BUILD_DIR=yes
+            ;;
+        (-B|--build)
+            DO_BUILD=YES
+            ;;
+        (-T|--test)
+            DO_TEST=YES
+            ;;
+        (-S|--shell)
+            DO_SHELL=YES
+            ;;
+        (--)
+            shift; break;;
         (-*) echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
         (*) break;;
     esac
     shift
 done
 
-# Skip the pbin.
-PROJECT_DIR="$(cd "$(dirname "$0")/.."; /bin/pwd)"
-/usr/bin/env PROJECT_NAME="Solve the N Queens Problem." \
-    PROJECT_DIR="$PROJECT_DIR" \
-    VIRTUAL_ENV="$ENV_NAME" \
-    PATH="$PROJECT_DIR/pbin:$PATH" /bin/bash
+
+case "$BUILD_TYPE" in
+    "Debug"|"Release"|"RelWithDebInfo"|"MinSizeRel")
+	    if [ -z "$BUILD_DIR" ] ; then
+            if [ -n "${SHORT_BUILD_DIR}" ] ; then
+	            BUILD_DIR=$BUILD_TYPE
+            else
+                BUILD_ARCH="$(${CXX} --print-multiarch)"
+                BUILD_DIR="$BUILD_TYPE@$BUILD_ARCH"
+            fi
+	    fi
+	    ;;
+    *)
+	    echo "$0: Unknown build type $BUILD_TYPE"
+	    exit 100
+	    ;;
+esac
+
+if [ -n "$1" ] ; then
+    if [ -z "$BUILD_DIR" ] ; then
+        BUILD_DIR="$1"
+        shift
+    else
+        echo "$PROGRAM_NAME: Unknown parameter \"$1\""
+        usage
+        return 100
+    fi
+fi
+
+export PROJECT_DIR="$(cd "$(dirname "$0")/.."; /bin/pwd)"
+export PROJECT_NAME="{{cookiecutter.project_slug}}"
+export PATH="$PROJECT_DIR/pbin:$PATH"
+export VIRTUAL_ENV="$ENV_NAME"
+if [ -z "$DO_TEST" ] && [ -z "$DO_BUILD" ] ; then
+   DO_SHELL=YES
+fi
+if [ -n "$DO_BUILD" ] ; then
+    if [ ! -d "$BUILD_DIR" ] ; then
+        echo "Build directory \"$BUILD_DIR\" does not exist (--build)."
+        exit 100
+    fi  
+    echo "Building in $BUILD_DIR."
+    (cd $BUILD_DIR; cmake --build .)
+fi
+if [ -n "$DO_TEST" ] ; then
+    if [ ! -d "$BUILD_DIR" ] ; then
+        echo "Build directory \"$BUILD_DIR\" does not exist (--test)."
+        exit 100
+    fi  
+   echo "Testing in $BUILD_DIR."
+   ( cd "$BUILD_DIR"; ctest)
+fi
+if [ -n "$DO_SHELL" ] ; then
+   echo "Running a shell in $(pwd)"
+   (cd "$PROJECT_DIR"; exec /bin/bash)
+fi
+

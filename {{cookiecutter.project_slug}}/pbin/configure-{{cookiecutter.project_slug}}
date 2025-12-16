@@ -14,7 +14,7 @@ ECHO=
 # SHORT_OPTS="uhdeD:t:f:"
 # LONG_OPTS=" user,host,debug,echo,domain-list:,cipher:,outfile:
 SHORT_OPTS="G:D:h"
-LONG_OPTS="cpp-compiler,c-compiler,short-build-dir,no-compile-commands-export,roll-build-dir,no-roll-build-dir"
+LONG_OPTS="cpp-compiler,c-compiler,short-build-dir,no-compile-commands-export,roll-build-dir,no-roll-build-dir,help"
 if ! options=$(getopt -u -o "$SHORT_OPTS" -l "$LONG_OPTS" -- "$@")
 then
     # something went wrong, getopt will put out an error message for us
