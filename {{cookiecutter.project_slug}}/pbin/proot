@@ -42,8 +42,8 @@ usage() {
     echo "                       appropriate directory."
     echo
     echo "For example, in any subdirectory, executing"
-    echo "    proot --build= -- ninja"
-    echo "will run \"ninja\" in the given build directory."
+    echo "    proot --build=Debug -- ninja"
+    echo "will run \"ninja\" in the Debug directory."
 }
 
 while [ -z "$DONE" ]; do
