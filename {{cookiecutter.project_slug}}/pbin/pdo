@@ -1,0 +1,195 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import argparse
+from pathlib import Path
+
+def error(message: str):
+      pass
+
+def project_name():
+      return '{{cookiecutter.project_slug}}'
+
+def parse_pair(name_pair:str) -> list[list[str]]|None:
+      pair = name_pair.split("=")
+      if len(pair) != 2:
+            error("Pair of names expected here.")
+            return None
+      return [pair]
+      
+class BuildDir:
+      def __init__(self, build_type : str, multiarch_triple : str):
+            self.build_type = build_type
+            self.multiarch_triple = multiarch_triple
+      def __str__(self) -> str:
+            return "%s@%s" % (self.build_type, self.multiarch_triple)
+            
+class Project:
+      def __init__(self):
+            self.project_root = self._find_project_root()
+            self.source_dir = self._find_source_dir()
+            self.build_dirs = self._find_build_dirs()
+
+      def _find_project_root(self) -> Path | None:
+            last=None
+            current=Path(os.getcwd())
+            while last != current:
+                  candidate = current / ".projectroot"
+                  if candidate.exists():
+                        return current
+                  last = current
+                  current = current.parent
+            return None
+
+      def _find_source_dir(self) -> Path | None:
+            project_root : Path | None = self.project_root
+            if not project_root or not project_root.is_dir():
+                  return None
+            if (project_root / ".sourceroot").exists():
+                  return project_root
+            for child in project_root.iterdir():
+                  if child.is_dir() and (child / '.sourceroot').exists():
+                        return child
+            return None
+
+      def _find_build_dirs(self) -> list[Path]:
+            answer = []
+            project_root : Path | None = self.project_root
+            if not project_root:
+                  return answer
+            # Look at all the directories in the project root.
+            for child in project_root.iterdir():
+                  if child.is_dir():
+                        # If a subdirectory contains a build directory tag,
+                        # then get its build type and multiarch triple from
+                        # the name of child.
+                        build_components = child.name.split('@')
+                        if len(build_components) == 2:
+                              buildmarkers = list(child.glob(".buildroot(*)"))
+                              if len(buildmarkers) > 0:
+                                    marker_build_type = buildmarkers[0].name[11:-1]
+                                    if marker_build_type == build_components[0]:
+                                          answer.append(BuildDir(build_components[0],
+                                                                 build_components[1]))
+            return answer
+      def __str__(self):
+            return("Project\n"
+                   "  Root: %s\n"
+                   "  Source: %s\n"
+                   "  Builds: %s\n" % (self.project_root,
+                                       self.source_dir,
+                                       [str(bd) for bd in self.build_dirs]))
+            
+
+              
+class Context:
+      def __init__(self, args = sys.argv[1:]):
+            self.parser = argparse.ArgumentParser("Global Help")
+            # Add global arguments to the parser.
+            self.parser.add_argument("-C", "--project-config",
+                                     action='store',
+                                     default="%s.ini" % (project_name()),
+                                     help='Initial project configuration.')
+            self.parser.add_argument("--short-build-dir",
+                                     action='store_true',
+                                     default=False,
+                                     help='Do not append the multiarch triple '
+                                          'to the build directory.')
+            self.parser.add_argument("--build-type",
+                                     action="store",
+                                     choices=['Debug',
+                                              'Release',
+                                              'RelWithDebInfo',
+                                              'MinSizeRel'],
+                                     default="Debug",
+                                     help='CMake build type.')
+            self.parser.set_defaults(subcommand = main_undefined)
+
+            # Add the CONFIGURE parser
+            self.subparsers = self.parser.add_subparsers(help="Subparsers help")
+            self.configure_parser = self.subparsers.add_parser("configure",
+                                                               help="Configure the project for CMake.")
+            self.configure_parser.add_argument("-G", "--generator",
+                                               action="store",
+                                               help='Set the CMake generator type')
+            self.configure_parser.add_argument("-D",
+                                               dest='definitions',
+                                               type=parse_pair,
+                                               action='extend',
+                                               metavar='VARIABLE=value',
+                                               help='Define a CMake value.')
+            self.configure_parser.add_argument("--no-compile-commands-export",
+                                               action='store_true',
+                                               default=False,
+                                               help='Don\'t export compile_commands.json file.')
+            self.configure_parser.add_argument("--roll-configure-dir",
+                                               action='store_true',
+                                               default=False,
+                                               help='Roll the configure directory.')
+            self.configure_parser.add_argument("--cpp-compiler",
+                                               action='store',
+                                               default='c++',
+                                               help='Set the C++ compiler value CXX.')
+            self.configure_parser.add_argument("--c-compiler",
+                                               action='store',
+                                               default='cc',
+                                               help='Set the C compiler value CC')
+            self.configure_parser.set_defaults(subcommand = main_configure)
+
+            # Add the TEST parser.
+            self.test_parser = self.subparsers.add_parser("test",
+                                                          help = 'Run all the tests.')
+
+            # Add the SHELL parser.
+            self.shell_parser = self.subparsers.add_parser("shell",
+                                                           help = 'Start a shell or run a command with'
+                                                                  '$PATH and other envariables set.')
+            self.shell_parser.add_argument("envariables",
+                                           type=parse_pair,
+                                           metavar='ENVARIABLE=VALUE',
+                                           nargs='*',
+                                           action='extend',
+                                           help="Set environment variables")
+            self.shell_parser.set_defaults(subcommand = main_shell)
+            
+            # Add the BUILD parser.
+            self.build_parser = self.subparsers.add_parser("build",
+                                                           help="Build help")
+            self.build_parser.add_argument("-A", "--build_argument",
+                                           action='store',
+                                           help = 'Some build argument.')
+            self.build_parser.set_defaults(subcommand = main_build)
+
+            self.parsed_args = self.parser.parse_args(args)
+
+      def do(self):
+            self.parsed_args.subcommand(self.parsed_args)
+      
+def main_undefined(args):
+      print("No subcommand specified.")
+      sys.exit(1)
+      
+def main_build(args):
+      print("Build: ", args)
+      sys.exit(0)
+      
+def main_test(args):
+      print("Test: ", args)
+      sys.exit(0)
+
+def main_shell(args):
+      print("Shell: ", args)
+      sys.exit(0)
+
+def main_configure(args):
+      project = Project()
+      print(project)
+      sys.exit(0)
+
+def main():
+      context = Context()
+      context.do()
+
+if __name__ == '__main__':
+      main()
