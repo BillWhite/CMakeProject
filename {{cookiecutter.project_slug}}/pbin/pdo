@@ -3,33 +3,207 @@
 import sys
 import os
 import argparse
+import logging
+import subprocess
 from pathlib import Path
+import shutil
+import traceback
 
-def error(message: str):
-      pass
-
-def project_name():
+def project_name() -> str:
+      '''The name of the project, from cookiecutter.'''
       return '{{cookiecutter.project_slug}}'
 
-def parse_pair(name_pair:str) -> list[list[str]]|None:
+# Helpers for logging.
+def info(format : str, *args) -> None:
+      '''Log an informational string.'''
+      logging.info(format, *args)
+
+def warning(format : str, *args) -> None:
+      '''Log a warning.'''
+      logging.warning(format, *args)
+
+def debug(format : str, *args) -> None:
+      '''Log a debugging message.'''
+      logging.debug(format, *args)
+
+def error(format : str, *args) -> None:
+      '''Log an error.'''
+      logging.error(format, *args)
+
+def critical(format : str, *args) -> None:
+      '''Log a fatal error. This forces an exit.'''
+      logging.critical(format, *args)
+      sys.exit(1)
+
+# Helpers for converting argument strings to more
+# useful values.
+def parse_pair(name_pair:str) -> list[str]|None:
+      '''Parse a pair of the form "N1=N2"'''
       pair = name_pair.split("=")
       if len(pair) != 2:
             error("Pair of names expected here.")
             return None
-      return [pair]
+      return [pair[0].strip(), pair[1].strip()]
+      
+def parse_existing_file(name : str, message: str, want_dir: bool = False) -> Path:
+      '''Parse a folder name into a path.'''
+      pth = Path(name).resolve()
+      if not pth.exists():
+            critical("%s named <%s> does not exist.",
+                     message,
+                     name);
+      if want_dir and not pth.is_dir():
+            critical("%s named <%s> is not a directory.",
+                     message,
+                     name)
+      return pth
+
+
+def command_output(command : list[str],
+                   capture_output=False,
+                   encoding='utf-8') -> subprocess.CompletedProcess:
+      return subprocess.run(command,
+                            capture_output=capture_output,
+                            encoding=encoding)
       
 class BuildDir:
       def __init__(self, build_type : str, multiarch_triple : str):
             self.build_type = build_type
             self.multiarch_triple = multiarch_triple
-      def __str__(self) -> str:
-            return "%s@%s" % (self.build_type, self.multiarch_triple)
-            
+      def path(self) -> Path:
+            return Path("%s@%s" % (self.build_type, self.multiarch_triple))
+
 class Project:
-      def __init__(self):
-            self.project_root = self._find_project_root()
+      def __init__(self, parsed_args):
+            self._argstate = {}
+            self._transfer_args(parsed_args)
+            if not self.project_root:
+                  self._argstate['project_root'] = self._find_project_root()
             self.source_dir = self._find_source_dir()
             self.build_dirs = self._find_build_dirs()
+            self.multiarch_triple = self.compute_multiarch_triple()
+            if not self.build_type:
+                  self._argstate['build_type'] = 'Debug'
+            self.configure_dir \
+                  = self.project_root \
+                      / (BuildDir(self.build_type, self.multiarch_triple).path())
+            self.NUM_ROLLS = 10
+
+      def _compute_project_root(self, pr_name, _) -> Path | None:
+            if not pr_name:
+                  pr_name = os.getcwd()
+            pr = Path(pr_name)
+            assert(pr)
+            assert(pr.exists())
+            assert(pr.is_dir())
+            return Path(pr)
+
+      def _dir_of_name(self, pr, _) -> Path:
+            assert(pr)
+            answer = Path(pr)
+            return answer
+
+      def _add_envariable(self,
+                          pair : list[str],
+                          old_value: list[list[str]] | None) -> list[list[str]]:
+            if not old_value:
+                  old_value = []
+            old_value.append(pair)
+            return old_value
+            
+
+      def _add_command_word(self, word : str, old_value : list[str] | None) -> list[str]:
+            if not old_value:
+                  old_value = []
+            old_value.append(word)
+            return old_value
+            
+      #
+      # Accessors for the state.
+      #
+      @property
+      def project_config(self) -> Path:
+            return self._argstate['project_config']
+
+      @property
+      def short_build_dir(self) -> bool:
+            return self._argstate['short_build_dir']
+
+      @property
+      def build_type(self) -> str:
+            return self._argstate['build_type']
+
+      @property
+      def log_level(self) -> str:
+            return self._argstate['log_level']
+
+      @property
+      def generator(self) -> str:
+            return self._argstate['generator']
+
+      @property
+      def definitions(self) -> list[list[str]]:
+            return self._argstate['definitions']
+
+      @property
+      def roll_configure_dir(self) -> bool:
+            return self._argstate['roll_configure_dir']
+
+      @property
+      def cpp_compiler(self) -> str:
+            return self._argstate['cpp_compiler']
+
+      @property
+      def c_compiler(self) -> str:
+            return self._argstate['c_compiler']
+
+      @property
+      def envariables(self) -> list[list[str]]:
+            return self._argstate['envariables']
+
+      @property
+      def command(self) -> list[str]:
+            return self._argstate['command']
+
+      @property
+      def project_root(self) -> Path:
+            return self._argstate['project_root']
+
+      @property
+      def build_storage_area(self) -> Path:
+            return self._argstate['build_storage_area']
+
+
+      def _transfer_args(self, parsed_args):
+            #
+            # This is a dictionary of argparse.Namespace keys to
+            # attributes in self.
+            #
+            transfer_specs = [
+                  # Base Project
+                  'project_root',
+                  'build_storage_area',
+                  'project_config',
+                  'short_build_dir',
+                  'build_type',
+                  'log_level',
+                  # Configure project
+                  'generator',
+                  'definitions',
+                  'no_compile_commands_export',
+                  'roll_configure_dir',
+                  'cpp_compiler',
+                  'c_compiler',
+                  # Shell project
+                  'envariables',
+                  'command',
+                  # Build project
+                  # Test project
+                  'do_build_before_test',
+                  ]
+            for key in transfer_specs:
+                  if key in parsed_args:
+                        self._argstate[key] = getattr(parsed_args, key)
 
       def _find_project_root(self) -> Path | None:
             last=None
@@ -42,16 +216,19 @@ class Project:
                   current = current.parent
             return None
 
-      def _find_source_dir(self) -> Path | None:
-            project_root : Path | None = self.project_root
-            if not project_root or not project_root.is_dir():
-                  return None
+      def _find_source_dir(self) -> Path:
+            if hasattr(self, 'source_dir'):
+                  return self.source_dir
+            project_root : Path = self.project_root
             if (project_root / ".sourceroot").exists():
                   return project_root
             for child in project_root.iterdir():
                   if child.is_dir() and (child / '.sourceroot').exists():
                         return child
-            return None
+            critical("Cannot find a source directory in project <%s>",
+                     project_name())
+            # This is never reached.
+            return Path()
 
       def _find_build_dirs(self) -> list[Path]:
             answer = []
@@ -73,6 +250,22 @@ class Project:
                                           answer.append(BuildDir(build_components[0],
                                                                  build_components[1]))
             return answer
+
+      def compute_multiarch_triple(self) -> str:
+            command_args = [self.cpp_compiler, "--print-multiarch"]
+            rv = command_output(command_args, capture_output=True)
+            info("Multiarch Triple compute command: <%s>",
+                 " ".join(command_args))
+            if rv.returncode != 0:
+                  error("Run command <%s> failed returncode: %s" %
+                        (" ".join(command_args), rv.returncode))
+                  return ""
+            return rv.stdout.strip()
+      
+      def do(self):
+            '''This is actually never called.'''
+            critical("No subcommand provided.")
+              
       def __str__(self):
             return("Project\n"
                    "  Root: %s\n"
@@ -80,16 +273,167 @@ class Project:
                    "  Builds: %s\n" % (self.project_root,
                                        self.source_dir,
                                        [str(bd) for bd in self.build_dirs]))
+
+class BuildProject(Project):
+      def __init__(self, parsed_args):
+            super(BuildProject, self).__init__(parsed_args)
+
+      def _create_build_args(self):
+            return ["cmake", "--build", "."]
+
+      def do(self):
+            assert(self.project_root)
+            os.chdir(self.project_root)
+            assert(self.configure_dir)
+            if not self.configure_dir.exists():
+                  critical("Build directory <%s> does not exist",
+                           self.configure_dir)
+            os.chdir(self.configure_dir)
+            cmake_args = self._create_build_args()
+            rv = command_output(cmake_args, capture_output=False)
+            if rv.returncode != 0:
+                  info(rv.stderr)
+
+class TestProject(Project):
+      def __init__(self, parsed_args):
+            super(TestProject, self).__init__(parsed_args)
+
+      def _create_test_args(self):
+            return ["ctest"]
+      
+      def do(self):
+            assert(self.project_root)
+            os.chdir(self.project_root)
+            assert(self.configure_dir)
+            if not self.configure_dir.exists():
+                  critical("Build directory <%s> does not exist",
+                           self.configure_dir)
+            os.chdir(self.configure_dir)
+            cmake_args = self._create_test_args()
+            rv = command_output(cmake_args, capture_output=False)
+            if rv.returncode != 0:
+                  info(rv.stderr)
+
+class ShellProject(Project):
+      def __init__(self, parsed_args):
+            super(ShellProject, self).__init__(parsed_args)
+
+      def do(self):
+            pass
+            
+class ConfigureProject(Project):
+      def __init__(self, parsed_args):
+            super(ConfigureProject, self).__init__(parsed_args)
+
+      def _do_roll_configure_dir(self):
+            self._delete_config_dir()
+
+      def _del_path(self, bd : Path) -> None:
+            if bd.is_dir():
+                  shutil.rmtree(bd)
+            else:
+                  bd.unlink()
+            
+      def _delete_config_dir(self):
+            bd = self.configure_dir
+            if bd.exists():
+                  self._del_path(bd)
+
+      def create_build_dir(self) -> Path:
+            bd = self.configure_dir
+            if bd.exists():
+                  self._del_path(bd)
+            bd.mkdir()
+            return bd
+      
+      def _create_configure_args(self) -> list[str]:
+            answer = ["cmake",
+                      "-G", self.generator]
+            for pair in self.definitions:
+                  answer.append(f'-D"{pair[0]}"="{pair[1]}"')
+            answer.append("-S")
+            answer.append(str(self.source_dir.resolve()))
+            answer.append("-B")
+            answer.append(str(self.configure_dir.resolve()))
+            return answer
+
+      def do(self):
+            # Steps.
+            #  1. Make a project here and CD to it.
+            #  2. Roll the build directory, or else delete it.
+            #  3. Make a new build directory and cd into it.
+            #  4. Run cmake there.
+            assert(self.project_root)
+            os.chdir(self.project_root)
+            if self.roll_configure_dir:
+                  self._do_roll_configure_dir()
+            else:
+                  self._delete_config_dir()
+            config_dir = self.create_build_dir()
+            os.chdir(config_dir)
+            cmake_args = self._create_configure_args()
+            rv = command_output(cmake_args)
+            info(rv.stdout)
             
 
-              
+
 class Context:
-      def __init__(self, args = sys.argv[1:]):
+      def main_undefined(self, _):
+            '''
+            This is an error. There is no subcommand defined. So we need
+            to just raise an end and abend here. The parsed args are
+            irrelevant.
+            '''
+            critical('No subcommand specified.%s', "")
+
+      def main_build(self, parsed_args):
+            # Steps.
+            #  1. Make a project here, and CD to it.
+            #  2. Run cmake --build
+            return BuildProject(parsed_args)
+      
+      def main_test(self, parsed_args):
+            # Steps.
+            #  1. Make a project here, and CD to it.
+            #  2. Run cmake --build
+            return TestProject(parsed_args)
+
+      def main_shell(self, parsed_args):
+            # Steps.
+            #  1. Make a project here. Don't CD to it.
+            #  2. Run a shell with the build_dir/pbin prepended, and
+            #     maybe some changes to LD_LIBRARY_PATH.
+            return ShellProject(parsed_args)
+
+      def main_configure(self, parsed_args):
+            return ConfigureProject(parsed_args)
+
+      def parse_args(self, args = sys.argv[1:]) -> argparse.Namespace:
+            return self.parser.parse_args(args)
+
+      def __init__(self):
             self.parser = argparse.ArgumentParser("Global Help")
             # Add global arguments to the parser.
+            self.parser.add_argument("-P", "--project-root",
+                                     type=lambda name:parse_existing_file(name,
+                                                                          'Project Directory',
+                                                                          True),
+                                     default=None,
+                                     help='Name the project directory. The default is '
+                                          'to search upward from the CWD of the CWD of '
+                                          'the command.')
+            self.parser.add_argument("--build-storage-area",
+                                     type=lambda name:parse_existing_file(name,
+                                                                          'Build Storage Area',
+                                                                          True),
+                                     default=None,
+                                     help='Build directories are put in this directory. '
+                                          'The default is the project root.')
             self.parser.add_argument("-C", "--project-config",
-                                     action='store',
-                                     default="%s.ini" % (project_name()),
+                                     type=lambda name:parse_existing_file(name,
+                                                                          "Project Configuration File",
+                                                                          False),
+                                     default=None,
                                      help='Initial project configuration.')
             self.parser.add_argument("--short-build-dir",
                                      action='store_true',
@@ -104,20 +448,40 @@ class Context:
                                               'MinSizeRel'],
                                      default="Debug",
                                      help='CMake build type.')
-            self.parser.set_defaults(subcommand = main_undefined)
+            self.parser.add_argument("--log-level",
+                                     action='store',
+                                     choices=['debug', 'info', 'warning', 'error', 'critical'],
+                                     default='warning',
+                                     help='Set logging level')
+            self.parser.add_argument("-@", "--pdb",
+                                     action='store_true',
+                                     default=False,
+                                     help='Enter the Python debugger on an uncaught exception.')
+            self.parser.add_argument("--cpp-compiler",
+                                     action='store',
+                                     default='c++',
+                                     help='Set the C++ compiler value CXX.')
+            self.parser.add_argument("--c-compiler",
+                                     action='store',
+                                     default='cc',
+                                     help='Set the C compiler value CC')
+
+            self.subparsers = self.parser.add_subparsers(help="Subparsers help")
+            self.parser.set_defaults(subcommand = self.main_undefined)
 
             # Add the CONFIGURE parser
-            self.subparsers = self.parser.add_subparsers(help="Subparsers help")
             self.configure_parser = self.subparsers.add_parser("configure",
                                                                help="Configure the project for CMake.")
             self.configure_parser.add_argument("-G", "--generator",
                                                action="store",
+                                               default='Ninja',
                                                help='Set the CMake generator type')
             self.configure_parser.add_argument("-D",
                                                dest='definitions',
                                                type=parse_pair,
                                                action='extend',
                                                metavar='VARIABLE=value',
+                                               default=[],
                                                help='Define a CMake value.')
             self.configure_parser.add_argument("--no-compile-commands-export",
                                                action='store_true',
@@ -127,69 +491,62 @@ class Context:
                                                action='store_true',
                                                default=False,
                                                help='Roll the configure directory.')
-            self.configure_parser.add_argument("--cpp-compiler",
-                                               action='store',
-                                               default='c++',
-                                               help='Set the C++ compiler value CXX.')
-            self.configure_parser.add_argument("--c-compiler",
-                                               action='store',
-                                               default='cc',
-                                               help='Set the C compiler value CC')
-            self.configure_parser.set_defaults(subcommand = main_configure)
-
+            self.configure_parser.set_defaults(subcommand = self.main_configure)
+            
             # Add the TEST parser.
             self.test_parser = self.subparsers.add_parser("test",
                                                           help = 'Run all the tests.')
+            self.test_parser.add_argument("-B", "--do-build-before-test",
+                                          type=bool,
+                                          default=True,
+                                          help='Do builds before testing.')
+            self.test_parser.set_defaults(subcommand = self.main_test)
 
             # Add the SHELL parser.
             self.shell_parser = self.subparsers.add_parser("shell",
                                                            help = 'Start a shell or run a command with'
                                                                   '$PATH and other envariables set.')
-            self.shell_parser.add_argument("envariables",
+            self.shell_parser.add_argument("-E", "--envariables",
                                            type=parse_pair,
                                            metavar='ENVARIABLE=VALUE',
-                                           nargs='*',
+                                           nargs=1,
                                            action='extend',
                                            help="Set environment variables")
-            self.shell_parser.set_defaults(subcommand = main_shell)
+            self.shell_parser.add_argument("command",
+                                           type=str,
+                                           metavar='... command arguments ...',
+                                           nargs='*',
+                                           action='extend',
+                                           default=[],
+                                           help='All arguments after -- are a command.')
+            self.shell_parser.set_defaults(subcommand = self.main_shell)
             
             # Add the BUILD parser.
             self.build_parser = self.subparsers.add_parser("build",
                                                            help="Build help")
-            self.build_parser.add_argument("-A", "--build_argument",
-                                           action='store',
-                                           help = 'Some build argument.')
-            self.build_parser.set_defaults(subcommand = main_build)
 
-            self.parsed_args = self.parser.parse_args(args)
+            # The set_defaults calls above will have set the subcommand
+            # in the parsed arguments. So, just call it.
+            self.build_parser.set_defaults(subcommand = self.main_build)
 
-      def do(self):
-            self.parsed_args.subcommand(self.parsed_args)
+      def do(self, parsed_args):
+            self.project = parsed_args.subcommand(parsed_args)
+            self.project.do()
+                  
       
-def main_undefined(args):
-      print("No subcommand specified.")
-      sys.exit(1)
-      
-def main_build(args):
-      print("Build: ", args)
-      sys.exit(0)
-      
-def main_test(args):
-      print("Test: ", args)
-      sys.exit(0)
-
-def main_shell(args):
-      print("Shell: ", args)
-      sys.exit(0)
-
-def main_configure(args):
-      project = Project()
-      print(project)
-      sys.exit(0)
-
 def main():
       context = Context()
-      context.do()
+      pdb_wanted = False
+      try:
+            parsed_args = context.parse_args(sys.argv[1:])
+            if 'pdb' in parsed_args and getattr(parsed_args, 'pdb'):
+                  pdb_wanted = True
+            context.do(parsed_args)
+      except:
+            if pdb_wanted:
+                  _, _, tb = sys.exc_info()
+                  traceback.print_exc()
+                  import pdb; pdb.post_mortem(tb)
 
 if __name__ == '__main__':
       main()
